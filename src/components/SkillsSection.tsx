@@ -2,46 +2,98 @@
 
 import { motion } from 'framer-motion';
 
-const SKILL_CATEGORIES = [
-  { title: 'Design', color: 'sticky-yellow', rotate: -2, skills: ['Figma', 'UI/UX Design', 'Wireframing', 'Prototyping', 'Glassmorphism', 'Design Systems'] },
-  { title: 'Frontend', color: 'sticky-blue', rotate: 1.5, skills: ['React / Next.js', 'HTML / CSS', 'Tailwind CSS', 'TypeScript', 'Framer Motion', 'Three.js'] },
-  { title: 'Mobile', color: 'sticky-pink', rotate: -1, skills: ['Android Studio', 'Java', 'Firebase', 'Kotlin', 'Mobile UI', 'REST APIs'] },
-  { title: 'Backend & Tools', color: 'sticky-green', rotate: 2, skills: ['Supabase', 'Firebase', 'Node.js', 'Git / GitHub', 'Vercel', 'Networking'] },
+const SKILLS = [
+  { name: 'Figma', icon: '🎨', color: '#e8913a' },
+  { name: 'UI/UX', icon: '✏️', color: '#d94f4f' },
+  { name: 'React', icon: '⚛️', color: '#4a8fe7' },
+  { name: 'Next.js', icon: '▲', color: '#1a1a1a' },
+  { name: 'TypeScript', icon: '📘', color: '#3178c6' },
+  { name: 'Tailwind', icon: '🌊', color: '#38bdf8' },
+  { name: 'Android Studio', icon: '📱', color: '#5cb270' },
+  { name: 'Java', icon: '☕', color: '#e8913a' },
+  { name: 'Firebase', icon: '🔥', color: '#f5c842' },
+  { name: 'Supabase', icon: '⚡', color: '#5cb270' },
+  { name: 'Node.js', icon: '🟢', color: '#5cb270' },
+  { name: 'Three.js', icon: '🧊', color: '#1a1a1a' },
+  { name: 'Framer Motion', icon: '💫', color: '#e884a8' },
+  { name: 'Git', icon: '🔀', color: '#d94f4f' },
+  { name: 'Vercel', icon: '🚀', color: '#1a1a1a' },
+  { name: 'HTML/CSS', icon: '🌐', color: '#e8913a' },
+  { name: 'Prototyping', icon: '🖼️', color: '#4a8fe7' },
+  { name: 'Wireframing', icon: '📐', color: '#777' },
+];
+
+const SOFT_SKILLS = [
+  'Problem-Solving', 'Communication', 'Collaboration', 'Adaptability', 'Teamwork', 'Creativity'
 ];
 
 export default function SkillsSection() {
   return (
-    <section id="skills" style={{ padding: '5rem 5%', maxWidth: '1100px', margin: '0 auto' }}>
-      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: '3rem' }}>
-        <h2 style={{ fontFamily: "'Caveat', cursive", fontSize: '3rem', color: '#f5f0e8', display: 'inline' }}>
-          <span style={{ background: 'linear-gradient(transparent 55%, rgba(231,76,60,0.4) 55%)', display: 'inline' }}>Skills & Tools</span>
-        </h2>
-        <div style={{ width: '80px', height: '3px', background: '#e74c3c', marginTop: '0.5rem' }} />
-      </motion.div>
+    <section id="skills" style={{ padding: '5rem 5%', maxWidth: '1100px', margin: '0 auto', position: 'relative' }}>
+      {/* Faded number */}
+      <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 0.08 }} viewport={{ once: true }}
+        style={{ position: 'absolute', top: '-30px', left: '0', fontFamily: "var(--serif)", fontSize: '12rem', fontWeight: 900, color: '#1a1a1a', pointerEvents: 'none', lineHeight: 1 }}>03</motion.p>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '2rem' }}>
-        {SKILL_CATEGORIES.map((cat, idx) => (
-          <motion.div
-            key={cat.title}
-            initial={{ opacity: 0, y: 30, rotate: cat.rotate * 2 }}
-            whileInView={{ opacity: 1, y: 0, rotate: cat.rotate }}
-            viewport={{ once: true }}
-            transition={{ delay: idx * 0.12, duration: 0.5 }}
-            className={`sticky-note ${cat.color}`}
-            style={{ '--rotate': `${cat.rotate}deg`, padding: '1.5rem', minHeight: '240px' } as React.CSSProperties}
-          >
-            <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem', borderBottom: '2px dashed currentColor', paddingBottom: '0.5rem', opacity: 0.7 }}>
-              {cat.title}
-            </h3>
-            <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {cat.skills.map(skill => (
-                <li key={skill} style={{ fontSize: '1.05rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <span style={{ opacity: 0.5 }}>✦</span> {skill}
-                </li>
-              ))}
-            </ul>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: '3rem', alignItems: 'start' }} className="board-grid">
+        
+        {/* LEFT: Technical skills as sticker board */}
+        <div>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            style={{ marginBottom: '2rem' }}>
+            <h2 style={{ fontFamily: "var(--serif)", fontSize: '2.2rem', fontWeight: 900, color: 'var(--ink-black)', display: 'inline' }}>
+              <span style={{ background: 'linear-gradient(transparent 55%, rgba(92,178,112,0.3) 55%)' }}>Software Skills</span>
+            </h2>
+            <div style={{ width: '60px', height: '3px', background: 'var(--accent-green)', marginTop: '0.5rem' }} />
           </motion.div>
-        ))}
+
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            className="paper-card" style={{ padding: '2rem', position: 'relative' }}>
+            <div className="tape tape-md" style={{ top: '-12px', left: '40%', transform: 'rotate(-2deg)' }} />
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }} className="skills-grid">
+              {SKILLS.map((skill, i) => (
+                <motion.div key={skill.name}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.03 }}
+                  whileHover={{ scale: 1.08, rotate: Math.random() > 0.5 ? 3 : -3 }}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '0.4rem',
+                    padding: '0.5rem 1rem', background: 'var(--bg-cream)',
+                    border: `2px solid ${skill.color}20`, borderRadius: '8px',
+                    fontWeight: 600, fontSize: '0.85rem', color: 'var(--ink-black)',
+                    cursor: 'default', transition: 'border-color 0.2s',
+                    boxShadow: '1px 2px 4px rgba(0,0,0,0.04)'
+                  }}>
+                  <span style={{ fontSize: '1.1rem' }}>{skill.icon}</span>
+                  {skill.name}
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+
+        {/* RIGHT: Soft skills on sticky note */}
+        <div>
+          <motion.div initial={{ opacity: 0, rotate: 5, y: 30 }} whileInView={{ opacity: 1, rotate: 2, y: 0 }} viewport={{ once: true }}
+            className="sticky-note sticky-yellow" style={{ padding: '1.5rem', marginTop: '4rem', position: 'relative' }}>
+            <div className="pin" style={{ top: '-7px', right: '20px' }} />
+            <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem', borderBottom: '2px dashed rgba(0,0,0,0.15)', paddingBottom: '0.5rem' }}>
+              ✦ Skills
+            </h3>
+            {SOFT_SKILLS.map(skill => (
+              <p key={skill} style={{ fontSize: '1.15rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ color: 'var(--accent-orange)' }}>→</span> {skill}
+              </p>
+            ))}
+          </motion.div>
+
+          {/* Handwritten note */}
+          <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+            style={{ fontFamily: "var(--handwritten)", fontSize: '1.1rem', color: 'var(--accent-red)', marginTop: '1rem', transform: 'rotate(-3deg)', textAlign: 'center' }}>
+            always learning new things! 📚
+          </motion.p>
+        </div>
       </div>
     </section>
   );

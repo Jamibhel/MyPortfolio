@@ -3,14 +3,25 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { ExternalLink } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
-const DUMMY_PROJECTS = [
+interface Project {
+  id: number;
+  title: string;
+  stack: string;
+  description: string;
+  category?: string;
+  link?: string;
+  images: string[]; // Array of image URLs
+}
+
+const DUMMY_PROJECTS: Project[] = [
   { 
     id: 1, title: 'Infinite Studio', 
     stack: 'Next.js · Tailwind CSS · Supabase · Vercel',
     description: 'A full-featured website for a content studio — currently live in production with booking systems and content management.',
-    image: '/project-infinitestudio.png',
+    images: ['/project-infinitestudio.png'],
     link: 'https://infinitestudio.space',
     category: 'Web Development'
   },
@@ -18,106 +29,126 @@ const DUMMY_PROJECTS = [
     id: 2, title: 'BookUp', 
     stack: 'Android Studio · Java · Firebase',
     description: 'A powerful student-tutor mobile platform with community feed, real-time messaging, and comprehensive academic features.',
-    image: '/project-bookup.png',
+    images: ['/project-bookup.png'],
     category: 'Mobile App'
   },
   { 
     id: 3, title: 'iCOINified', 
     stack: 'Figma · Glassmorphism · UI/UX',
     description: 'A premium crypto application design exploring advanced glassmorphism techniques for an elegant financial interface.',
-    image: '/project-icoinified.png',
+    images: ['/project-icoinified.png'],
     category: 'UI/UX Design'
   }
 ];
 
 export default function ProjectsGrid() {
-  const [projects, setProjects] = useState(DUMMY_PROJECTS);
+  const [projects, setProjects] = useState<Project[]>(DUMMY_PROJECTS);
 
   useEffect(() => {
     async function fetchProjects() {
-      const { data } = await supabase.from('projects').select('*').order('id', { ascending: false });
-      if (data && data.length > 0) setProjects(data as any);
+      const { data } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
+      if (data && data.length > 0) {
+        const parsed = data.map(p => ({
+          ...p,
+          images: typeof p.images === 'string' ? JSON.parse(p.images) : (p.images || [])
+        }));
+        setProjects(parsed as Project[]);
+      }
     }
     fetchProjects();
   }, []);
 
-  const rotations = [2, -1.5, 1];
+  const rotations = [1.5, -1, 0.5, -1.5, 1];
+  const tapeColors = ['washi-pink', 'washi-blue', 'washi-green', 'washi-pink', 'washi-blue'];
 
   return (
-    <section id="projects" style={{ padding: '5rem 5%', maxWidth: '1200px', margin: '0 auto' }}>
-      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: '3.5rem' }}>
-        <h2 style={{ fontFamily: "'Caveat', cursive", fontSize: '3rem', color: '#f5f0e8', display: 'inline' }}>
-          <span style={{ background: 'linear-gradient(transparent 55%, rgba(59,130,246,0.4) 55%)', display: 'inline' }}>Selected Works</span>
+    <section id="projects" style={{ padding: '5rem 5%', maxWidth: '1200px', margin: '0 auto', position: 'relative' }}>
+      {/* Faded number */}
+      <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 0.08 }} viewport={{ once: true }}
+        style={{ position: 'absolute', top: '-30px', right: '0', fontFamily: "var(--serif)", fontSize: '12rem', fontWeight: 900, color: '#1a1a1a', pointerEvents: 'none', lineHeight: 1 }}>04</motion.p>
+
+      {/* Section header */}
+      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+        style={{ marginBottom: '3.5rem' }}>
+        <h2 style={{ fontFamily: "var(--serif)", fontSize: 'clamp(2rem, 4vw, 2.8rem)', fontWeight: 900, color: 'var(--ink-black)' }}>
+          <span style={{ background: 'linear-gradient(transparent 55%, rgba(74,143,231,0.3) 55%)' }}>Selected Works</span>
         </h2>
-        <div style={{ width: '80px', height: '3px', background: '#3b82f6', marginTop: '0.5rem' }} />
-        <p style={{ fontFamily: "'Caveat', cursive", color: '#999', fontSize: '1.3rem', marginTop: '0.75rem' }}>
+        <div style={{ width: '60px', height: '3px', background: 'var(--accent-blue)', marginTop: '0.5rem' }} />
+        <p style={{ fontFamily: "var(--handwritten)", color: 'var(--ink-light)', fontSize: '1.3rem', marginTop: '0.5rem' }}>
           Projects I&apos;ve designed, developed, or both ↓
         </p>
       </motion.div>
 
+      {/* Projects */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '5rem' }}>
         {projects.map((project, i) => (
-          <motion.div
-            key={project.id}
+          <motion.article key={project.id}
             initial={{ opacity: 0, y: 60 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.7 }}
-            className="project-editorial"
-            style={{ display: 'flex', gap: '3rem', alignItems: 'flex-start', flexDirection: i % 2 === 0 ? 'row' : 'row-reverse' }}
-          >
-            {/* Photo frame with project image */}
-            <motion.div
-              whileHover={{ rotate: 0, scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-              className="photo-frame"
-              style={{ flex: '1 1 55%', transform: `rotate(${rotations[i % 3]}deg)`, position: 'relative' }}
-            >
-              <div className="pin" style={{ top: '-8px', left: '50%', marginLeft: '-8px' }} />
-              <div style={{ position: 'relative', width: '100%', aspectRatio: '16/10', background: '#ddd', overflow: 'hidden' }}>
-                {project.image ? (
-                  <Image src={project.image} alt={project.title} fill style={{ objectFit: 'cover' }} sizes="(max-width: 768px) 100vw, 55vw" />
-                ) : (
-                  <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Caveat', cursive", fontSize: '1.5rem', color: '#999' }}>
-                    Project Screenshot
-                  </div>
-                )}
+            className="project-row"
+            style={{ display: 'flex', gap: '3rem', alignItems: 'flex-start', flexDirection: i % 2 === 0 ? 'row' : 'row-reverse' }}>
+
+            {/* Images as photo frames */}
+            <div style={{ flex: '1 1 55%', position: 'relative' }}>
+              <div className="project-images" style={{ display: 'grid', gridTemplateColumns: project.images.length > 1 ? '1fr 1fr' : '1fr', gap: '1rem' }}>
+                {project.images.map((img, imgIdx) => (
+                  <motion.div key={imgIdx}
+                    whileHover={{ rotate: 0, scale: 1.02 }}
+                    className="photo-frame"
+                    style={{ transform: `rotate(${rotations[(i + imgIdx) % rotations.length]}deg)`, position: 'relative' }}>
+                    <div className="pin" style={{ top: '-7px', left: '50%', marginLeft: '-7px' }} />
+                    <div style={{ position: 'relative', width: '100%', aspectRatio: '16/10', background: '#e8e0d4', overflow: 'hidden' }}>
+                      <Image src={img} alt={`${project.title} screenshot ${imgIdx + 1}`} fill style={{ objectFit: 'cover' }} sizes="(max-width: 768px) 100vw, 50vw" />
+                    </div>
+                  </motion.div>
+                ))}
               </div>
-              <p style={{ fontFamily: "'Caveat', cursive", fontSize: '1rem', color: '#888', textAlign: 'center', marginTop: '4px' }}>
-                {project.category}
+              {/* Handwritten caption */}
+              <p style={{ fontFamily: "var(--handwritten)", color: 'var(--ink-light)', fontSize: '1.1rem', textAlign: 'center', marginTop: '0.5rem', transform: `rotate(${rotations[i % rotations.length] * -1}deg)` }}>
+                {project.category} ✦
               </p>
-            </motion.div>
+            </div>
 
             {/* Details on paper card */}
-            <motion.div
-              initial={{ rotate: i % 2 === 0 ? 1 : -1 }}
-              className="paper-card"
-              style={{ flex: '1 1 40%', padding: '2rem', position: 'relative', transform: `rotate(${i % 2 === 0 ? 1 : -1}deg)` }}
-            >
-              <div className="tape tape-top-left" />
+            <div style={{ flex: '1 1 40%' }}>
+              <motion.div className="paper-card" style={{ padding: '2rem', position: 'relative', transform: `rotate(${i % 2 === 0 ? 0.5 : -0.5}deg)` }}>
+                <div className={`washi-tape ${tapeColors[i % tapeColors.length]}`} style={{ width: '100px', top: '-12px', left: '30px', transform: 'rotate(-3deg)' }} />
+                <div className="paper-clip" style={{ top: '-18px', right: '25px' }} />
 
-              <span style={{ fontFamily: "'Fira Code', monospace", fontSize: '0.7rem', background: '#e74c3c', color: 'white', padding: '0.2rem 0.6rem', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '1rem', display: 'inline-block' }}>
-                {project.category || 'Project'}
-              </span>
+                <span style={{ fontFamily: "var(--mono)", fontSize: '0.65rem', background: 'var(--accent-orange)', color: 'white', padding: '0.2rem 0.6rem', letterSpacing: '0.1em', textTransform: 'uppercase', display: 'inline-block', marginBottom: '0.75rem' }}>
+                  {project.category || 'Project'}
+                </span>
 
-              <h3 style={{ fontSize: '1.8rem', fontWeight: 700, color: '#1a1a1a', marginBottom: '0.75rem', letterSpacing: '-0.02em' }}>
-                {project.title}
-              </h3>
-              <p style={{ color: '#555', lineHeight: 1.7, marginBottom: '1rem', fontSize: '0.95rem' }}>
-                {project.description}
-              </p>
-              <p style={{ fontFamily: "'Fira Code', monospace", color: '#888', fontSize: '0.8rem', marginBottom: '1.5rem' }}>
-                {project.stack}
-              </p>
+                <h3 style={{ fontFamily: "var(--serif)", fontSize: '1.8rem', fontWeight: 900, color: 'var(--ink-black)', marginBottom: '0.75rem', letterSpacing: '-0.02em' }}>
+                  {project.title}
+                </h3>
+                <p style={{ color: 'var(--ink-gray)', lineHeight: 1.7, fontSize: '0.95rem', marginBottom: '1rem' }}>
+                  {project.description}
+                </p>
+                <p style={{ fontFamily: "var(--mono)", color: 'var(--ink-light)', fontSize: '0.8rem', marginBottom: '1.5rem' }}>
+                  {project.stack}
+                </p>
 
-              {project.link && (
-                <a href={project.link} target="_blank" rel="noopener noreferrer"
-                  style={{ fontFamily: "'Caveat', cursive", fontSize: '1.2rem', color: '#3b82f6', fontWeight: 700, borderBottom: '2px solid #3b82f6', paddingBottom: '2px' }}>
-                  Visit Live →
-                </a>
+                {project.link && (
+                  <a href={project.link} target="_blank" rel="noopener noreferrer"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'var(--ink-black)', color: 'var(--paper-white)', padding: '0.5rem 1.2rem', fontWeight: 700, fontSize: '0.8rem', letterSpacing: '0.05em', textTransform: 'uppercase', transition: 'all 0.2s' }}
+                    onMouseOver={(e) => { e.currentTarget.style.background = '#e8913a'; }}
+                    onMouseOut={(e) => { e.currentTarget.style.background = '#1a1a1a'; }}>
+                    <ExternalLink size={14} /> Visit Live
+                  </a>
+                )}
+              </motion.div>
+
+              {/* Handwritten annotation */}
+              {i === 0 && (
+                <p style={{ fontFamily: "var(--handwritten)", color: 'var(--accent-red)', fontSize: '1.1rem', marginTop: '0.75rem', marginLeft: '1rem', transform: 'rotate(-2deg)' }}>
+                  ← currently live! 🚀
+                </p>
               )}
-            </motion.div>
-          </motion.div>
+            </div>
+          </motion.article>
         ))}
       </div>
     </section>

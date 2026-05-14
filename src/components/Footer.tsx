@@ -12,44 +12,51 @@ function LinkedinIcon() {
 
 export default function Footer() {
   return (
-    <footer id="contact" style={{ padding: '5rem 5% 3rem', maxWidth: '1000px', margin: '0 auto' }}>
-      {/* Contact paper card */}
-      <motion.div
-        initial={{ opacity: 0, y: 40, rotate: -1 }}
-        whileInView={{ opacity: 1, y: 0, rotate: -0.5 }}
-        viewport={{ once: true }}
-        className="paper-card"
-        style={{ padding: '3rem', textAlign: 'center', position: 'relative', marginBottom: '3rem' }}
-      >
-        <div className="tape tape-top-center" />
-        <div className="pin" style={{ top: '-8px', right: '40px' }} />
+    <footer id="contact" style={{ padding: '5rem 5% 3rem', maxWidth: '900px', margin: '0 auto', position: 'relative' }}>
+      {/* Faded number */}
+      <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 0.08 }} viewport={{ once: true }}
+        style={{ position: 'absolute', top: '-30px', left: '0', fontFamily: "var(--serif)", fontSize: '12rem', fontWeight: 900, color: '#1a1a1a', pointerEvents: 'none', lineHeight: 1 }}>05</motion.p>
 
-        <h2 style={{ fontFamily: "'Caveat', cursive", fontSize: '2.8rem', color: '#1a1a1a', marginBottom: '0.75rem' }}>
-          Let&apos;s Work Together!
+      {/* Main contact card */}
+      <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+        className="paper-card" style={{ padding: '3rem', position: 'relative', textAlign: 'center', marginBottom: '2rem' }}>
+        <div className="washi-tape washi-pink" style={{ width: '120px', top: '-12px', left: '50%', marginLeft: '-60px', transform: 'rotate(-1deg)' }} />
+        <div className="paper-clip" style={{ top: '-18px', right: '30px' }} />
+        <div className="coffee-stain" style={{ bottom: '-30px', left: '-20px' }} />
+
+        <p style={{ fontFamily: "var(--handwritten)", fontSize: '1.3rem', color: 'var(--ink-light)', marginBottom: '0.5rem' }}>
+          Got a project? Let&apos;s talk!
+        </p>
+        <h2 style={{ fontFamily: "var(--serif)", fontSize: '2.5rem', fontWeight: 900, color: 'var(--ink-black)', marginBottom: '1rem' }}>
+          Let&apos;s Work <span style={{ background: 'linear-gradient(transparent 55%, rgba(232,145,58,0.3) 55%)' }}>Together</span>
         </h2>
-        <p style={{ color: '#555', fontSize: '1rem', maxWidth: '500px', margin: '0 auto 2rem', lineHeight: 1.7 }}>
-          Got a project in mind or just want to connect? I&apos;m always open to discussing design, development, and new creative opportunities.
+        <p style={{ color: 'var(--ink-gray)', fontSize: '1rem', maxWidth: '480px', margin: '0 auto 2rem', lineHeight: 1.7 }}>
+          I&apos;m always open to discussing design, development, and new creative opportunities. Don&apos;t hesitate to reach out!
         </p>
 
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center' }}>
-          <ContactPill href="mailto:jamibelbhello0104@gmail.com" icon={<Mail size={16} />} label="Email Me" />
-          <ContactPill href="tel:+2349050955981" icon={<Phone size={16} />} label="+234 905 095 5981" />
-          <ContactPill href="https://github.com/Jamibhel" icon={<GithubIcon />} label="GitHub" />
-          <ContactPill href="https://www.linkedin.com/in/bello-muh-jamiu-ishola-10371724a" icon={<LinkedinIcon />} label="LinkedIn" />
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', justifyContent: 'center' }}>
+          <ContactBtn href="mailto:jamibelbhello0104@gmail.com" icon={<Mail size={16} />} label="Email Me" bg="#d94f4f" />
+          <ContactBtn href="tel:+2349050955981" icon={<Phone size={16} />} label="+234 905 095 5981" bg="#5cb270" />
+          <ContactBtn href="https://github.com/Jamibhel" icon={<GithubIcon />} label="GitHub" bg="#1a1a1a" />
+          <ContactBtn href="https://www.linkedin.com/in/bello-muh-jamiu-ishola-10371724a" icon={<LinkedinIcon />} label="LinkedIn" bg="#4a8fe7" />
         </div>
       </motion.div>
 
+      {/* Handwritten note */}
+      <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+        style={{ fontFamily: "var(--handwritten)", fontSize: '1.2rem', color: 'var(--accent-orange)', textAlign: 'center', transform: 'rotate(-1deg)', marginBottom: '2.5rem' }}>
+        Please don&apos;t hesitate to reach out if this portfolio doesn&apos;t provide enough info! ✌️
+      </motion.p>
+
       {/* Bottom bar */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', padding: '1rem 0' }}>
-        <p style={{ color: '#666', fontSize: '0.85rem', fontFamily: "'Caveat', cursive", fontSize: '1rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', padding: '1.5rem 0', borderTop: '1px solid rgba(0,0,0,0.08)' }}>
+        <p style={{ fontFamily: "var(--handwritten)", color: 'var(--ink-light)', fontSize: '1.1rem' }}>
           © {new Date().getFullYear()} Bello Jamiu Muhammad ✦ Crafted with passion
         </p>
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(255,255,255,0.08)', color: '#999', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '4px', padding: '0.5rem 1rem', cursor: 'pointer', fontFamily: "'Caveat', cursive", fontSize: '1rem', transition: 'all 0.2s' }}
-          onMouseOver={(e) => { e.currentTarget.style.color = '#f5c842'; e.currentTarget.style.borderColor = '#f5c842'; }}
-          onMouseOut={(e) => { e.currentTarget.style.color = '#999'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
-        >
+        <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'var(--ink-black)', color: 'var(--paper-white)', border: 'none', padding: '0.5rem 1rem', fontFamily: "var(--handwritten)", fontSize: '1rem', cursor: 'pointer', transition: 'all 0.2s' }}
+          onMouseOver={(e) => { e.currentTarget.style.background = '#e8913a'; }}
+          onMouseOut={(e) => { e.currentTarget.style.background = '#1a1a1a'; }}>
           <ArrowUp size={14} /> Back to top
         </button>
       </div>
@@ -57,13 +64,12 @@ export default function Footer() {
   );
 }
 
-function ContactPill({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
+function ContactBtn({ href, icon, label, bg }: { href: string; icon: React.ReactNode; label: string; bg: string }) {
   return (
     <a href={href} target="_blank" rel="noopener noreferrer"
-      style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#1a1a1a', color: '#f5f0e8', padding: '0.6rem 1.2rem', fontWeight: 600, fontSize: '0.85rem', transition: 'all 0.2s', cursor: 'pointer' }}
-      onMouseOver={(e) => { e.currentTarget.style.background = '#f5c842'; e.currentTarget.style.color = '#1a1a1a'; }}
-      onMouseOut={(e) => { e.currentTarget.style.background = '#1a1a1a'; e.currentTarget.style.color = '#f5f0e8'; }}
-    >
+      style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: bg, color: 'white', padding: '0.65rem 1.3rem', fontWeight: 600, fontSize: '0.85rem', borderRadius: '4px', transition: 'all 0.2s', cursor: 'pointer', opacity: 0.9 }}
+      onMouseOver={(e) => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+      onMouseOut={(e) => { e.currentTarget.style.opacity = '0.9'; e.currentTarget.style.transform = 'translateY(0)'; }}>
       {icon} {label}
     </a>
   );
