@@ -2,9 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Download, Mail, Phone } from 'lucide-react';
-import CanvasBackground from '@/components/CanvasBackground';
 
-// Inline SVG brand icons (lucide-react doesn't include brand logos)
 function GithubIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -23,61 +21,89 @@ function LinkedinIcon() {
 
 export default function Hero() {
   return (
-    <section id="home" style={{ position: 'relative', height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 5%', overflow: 'hidden' }}>
-      <CanvasBackground />
-      <div style={{ position: 'relative', zIndex: 1, maxWidth: '1000px' }}>
-        <motion.h2
+    <section 
+      id="home" 
+      style={{ 
+        position: 'relative', height: '100vh', display: 'flex', flexDirection: 'column', 
+        justifyContent: 'center', padding: '0 8%', overflow: 'hidden',
+        backgroundImage: 'url(/hero-bg.png)',
+        backgroundSize: 'cover', backgroundPosition: 'center'
+      }}
+    >
+      {/* Dark overlay for readability */}
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(15,23,42,0.92) 0%, rgba(15,23,42,0.7) 100%)' }} />
+      
+      <div style={{ position: 'relative', zIndex: 1, maxWidth: '720px' }}>
+        {/* Editorial overline */}
+        <motion.div
+          initial={{ opacity: 0, width: 0 }}
+          animate={{ opacity: 1, width: '60px' }}
+          transition={{ duration: 0.8 }}
+          style={{ height: '3px', background: '#38bdf8', marginBottom: '2rem' }}
+        />
+
+        <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          style={{ color: '#38bdf8', fontSize: '1.2rem', fontFamily: "'Fira Code', monospace", marginBottom: '1rem' }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          style={{ color: '#94a3b8', fontSize: '0.95rem', fontFamily: "'Fira Code', monospace", letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '1rem' }}
         >
-          Hi, I&apos;m Bello Jamiu Muhammad
-        </motion.h2>
+          Portfolio — 2024
+        </motion.p>
+
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-          style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', lineHeight: 1.1, fontWeight: 700, background: 'linear-gradient(135deg, #f8fafc, #38bdf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-0.02em' }}
+          transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+          style={{ fontSize: 'clamp(2.8rem, 6vw, 4.5rem)', lineHeight: 1.08, fontWeight: 700, color: '#f8fafc', letterSpacing: '-0.03em' }}
         >
-          UI/UX Designer &amp;<br/>Full-Stack Developer
+          Bello Jamiu<br/>Muhammad
         </motion.h1>
+
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.8 }}
-          style={{ color: '#94a3b8', fontSize: '1.15rem', marginTop: '1.5rem', marginBottom: '2.5rem', maxWidth: '650px', lineHeight: 1.7 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
+          style={{ color: '#cbd5e1', fontSize: '1.15rem', marginTop: '1.5rem', marginBottom: '1rem', lineHeight: 1.7, maxWidth: '560px' }}
         >
-          I blend creative design with technical engineering to craft beautiful, user-centered digital experiences. From designing intuitive interfaces to building robust mobile and web platforms, I focus on turning complex problems into seamless, human-friendly solutions.
+          I blend creative design with technical engineering to craft beautiful, user-centered digital experiences — from intuitive interfaces to robust mobile and web platforms.
+        </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.6 }}
+          style={{ color: '#818cf8', fontSize: '1rem', fontWeight: 600, marginBottom: '2.5rem' }}
+        >
+          UI/UX Designer · Full-Stack Developer
         </motion.p>
         
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
+          transition={{ delay: 0.7, duration: 0.5 }}
           style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}
         >
           <a 
-            href="/resume.pdf" 
-            download
+            href="/resume.pdf" download
             style={{ 
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem', 
-              background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', 
-              border: '1px solid rgba(56, 189, 248, 0.4)', padding: '0.8rem 1.5rem', 
-              borderRadius: '30px', fontWeight: 600, fontSize: '1rem',
-              transition: 'all 0.2s', cursor: 'pointer'
+              background: '#38bdf8', color: '#0f172a', 
+              border: 'none', padding: '0.8rem 1.8rem', 
+              borderRadius: '4px', fontWeight: 700, fontSize: '0.95rem',
+              transition: 'all 0.2s', cursor: 'pointer', letterSpacing: '0.02em'
             }}
-            onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(56, 189, 248, 0.2)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-            onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(56, 189, 248, 0.1)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+            onMouseOver={(e) => { e.currentTarget.style.background = '#7dd3fc'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+            onMouseOut={(e) => { e.currentTarget.style.background = '#38bdf8'; e.currentTarget.style.transform = 'translateY(0)'; }}
           >
-            <Download size={18} /> Resume
+            <Download size={16} /> Download CV
           </a>
 
-          <div style={{ display: 'flex', gap: '0.75rem', marginLeft: '1rem' }}>
-            <SocialIcon href="mailto:jamibelbhello0104@gmail.com" icon={<Mail size={20} />} />
+          <div style={{ display: 'flex', gap: '0.6rem', marginLeft: '0.5rem' }}>
+            <SocialIcon href="mailto:jamibelbhello0104@gmail.com" icon={<Mail size={18} />} />
             <SocialIcon href="https://github.com/Jamibhel" icon={<GithubIcon />} />
             <SocialIcon href="https://www.linkedin.com/in/bello-muh-jamiu-ishola-10371724a" icon={<LinkedinIcon />} />
-            <SocialIcon href="tel:+2349050955981" icon={<Phone size={20} />} />
+            <SocialIcon href="tel:+2349050955981" icon={<Phone size={18} />} />
           </div>
         </motion.div>
       </div>
@@ -88,17 +114,15 @@ export default function Hero() {
 function SocialIcon({ href, icon }: { href: string; icon: React.ReactNode }) {
   return (
     <a 
-      href={href} 
-      target="_blank" 
-      rel="noopener noreferrer"
+      href={href} target="_blank" rel="noopener noreferrer"
       style={{
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        width: '45px', height: '45px', borderRadius: '50%',
-        background: 'rgba(255, 255, 255, 0.05)', color: '#cbd5e1',
-        border: '1px solid rgba(255, 255, 255, 0.1)', transition: 'all 0.2s', cursor: 'pointer'
+        width: '42px', height: '42px', borderRadius: '4px',
+        background: 'rgba(255, 255, 255, 0.08)', color: '#cbd5e1',
+        border: '1px solid rgba(255, 255, 255, 0.12)', transition: 'all 0.2s', cursor: 'pointer'
       }}
       onMouseOver={(e) => { e.currentTarget.style.color = '#38bdf8'; e.currentTarget.style.borderColor = '#38bdf8'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-      onMouseOut={(e) => { e.currentTarget.style.color = '#cbd5e1'; e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+      onMouseOut={(e) => { e.currentTarget.style.color = '#cbd5e1'; e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)'; e.currentTarget.style.transform = 'translateY(0)'; }}
     >
       {icon}
     </a>
