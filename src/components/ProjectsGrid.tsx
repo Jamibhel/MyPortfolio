@@ -1,6 +1,8 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { supabase } from '@/lib/supabase';
 
 const DUMMY_PROJECTS = [
   { id: 1, title: 'Enterprise Dashboard', stack: 'Next.js, Supabase, Tailwind' },
@@ -8,13 +10,24 @@ const DUMMY_PROJECTS = [
 ];
 
 export default function ProjectsGrid() {
-  // In the future, fetch from supabase: const { data } = await supabase.from('projects').select('*');
+  const [projects, setProjects] = useState(DUMMY_PROJECTS);
+
+  useEffect(() => {
+    async function fetchProjects() {
+      if (!supabase.supabaseUrl) return; // Supabase not configured yet
+      const { data, error } = await supabase.from('projects').select('*').order('id', { ascending: false });
+      if (data && data.length > 0) {
+        setProjects(data);
+      }
+    }
+    fetchProjects();
+  }, []);
 
   return (
     <section style={{ padding: '5rem 5%' }}>
       <h2 style={{ fontSize: '2.5rem', color: '#38bdf8', marginBottom: '3rem' }}>Selected Works</h2>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '3rem' }}>
-        {DUMMY_PROJECTS.map((project, i) => (
+        {projects.map((project, i) => (
           <motion.div
             key={project.id}
             initial={{ opacity: 0, y: 50 }}

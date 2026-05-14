@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import CanvasBackground from '@/components/CanvasBackground';
 
 export const metadata: Metadata = {
   title: 'Advanced Portfolio',
@@ -15,7 +14,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <CanvasBackground />
         {children}
       </body>
     </html>

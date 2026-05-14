@@ -1,6 +1,8 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { supabase } from '@/lib/supabase';
 
 const EXPERIENCES = [
   {
@@ -30,6 +32,23 @@ const EXPERIENCES = [
 ];
 
 export default function ExperienceTimeline() {
+  const [experiences, setExperiences] = useState(EXPERIENCES);
+
+  useEffect(() => {
+    async function fetchExperiences() {
+      if (!supabase.supabaseUrl) return; // Supabase not configured yet
+      const { data, error } = await supabase.from('experiences').select('*').order('id', { ascending: false });
+      if (data && data.length > 0) {
+        // Parse tags if they are stored as JSON/comma-separated strings
+        const parsedData = data.map(exp => ({
+          ...exp,
+          tags: typeof exp.tags === 'string' ? exp.tags.split(',') : (exp.tags || [])
+        }));
+        setExperiences(parsedData as any);
+      }
+    }
+    fetchExperiences();
+  }, []);
   return (
     <section style={{ padding: '5rem 5%', maxWidth: '1000px', margin: '0 auto' }}>
       <motion.h2 
@@ -45,7 +64,7 @@ export default function ExperienceTimeline() {
         {/* Timeline Line */}
         <div style={{ position: 'absolute', left: '19px', top: 0, bottom: 0, width: '2px', background: 'rgba(255,255,255,0.1)' }} />
 
-        {EXPERIENCES.map((exp, i) => (
+        {experiences.map((exp, i) => (
           <motion.div 
             key={exp.id}
             initial={{ opacity: 0, x: -50 }}
