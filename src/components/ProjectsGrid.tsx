@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { ExternalLink } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import Polaroid3D from './Polaroid3D';
 
 interface Project {
   id: number;
@@ -16,33 +17,8 @@ interface Project {
   images: string[]; // Array of image URLs
 }
 
-const DUMMY_PROJECTS: Project[] = [
-  { 
-    id: 1, title: 'Infinite Studio', 
-    stack: 'Next.js · Tailwind CSS · Supabase · Vercel',
-    description: 'A full-featured website for a content studio — currently live in production with booking systems and content management.',
-    images: ['/project-infinitestudio.png'],
-    link: 'https://infinitestudio.space',
-    category: 'Web Development'
-  },
-  { 
-    id: 2, title: 'BookUp', 
-    stack: 'Android Studio · Java · Firebase',
-    description: 'A powerful student-tutor mobile platform with community feed, real-time messaging, and comprehensive academic features.',
-    images: ['/project-bookup.png'],
-    category: 'Mobile App'
-  },
-  { 
-    id: 3, title: 'iCOINified', 
-    stack: 'Figma · Glassmorphism · UI/UX',
-    description: 'A premium crypto application design exploring advanced glassmorphism techniques for an elegant financial interface.',
-    images: ['/project-icoinified.png'],
-    category: 'UI/UX Design'
-  }
-];
-
 export default function ProjectsGrid() {
-  const [projects, setProjects] = useState<Project[]>(DUMMY_PROJECTS);
+  const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
     async function fetchProjects() {
@@ -90,19 +66,16 @@ export default function ProjectsGrid() {
             className="project-row"
             style={{ display: 'flex', gap: '3rem', alignItems: 'flex-start', flexDirection: i % 2 === 0 ? 'row' : 'row-reverse' }}>
 
-            {/* Images as photo frames */}
+            {/* Images as 3D polaroids */}
             <div style={{ flex: '1 1 55%', position: 'relative' }}>
               <div className="project-images" style={{ display: 'grid', gridTemplateColumns: project.images.length > 1 ? '1fr 1fr' : '1fr', gap: '1rem' }}>
                 {project.images.map((img, imgIdx) => (
-                  <motion.div key={imgIdx}
-                    whileHover={{ rotate: 0, scale: 1.02 }}
-                    className="photo-frame"
-                    style={{ transform: `rotate(${rotations[(i + imgIdx) % rotations.length]}deg)`, position: 'relative' }}>
-                    <div className="pin" style={{ top: '-7px', left: '50%', marginLeft: '-7px' }} />
-                    <div style={{ position: 'relative', width: '100%', aspectRatio: '16/10', background: '#e8e0d4', overflow: 'hidden' }}>
-                      <Image src={img} alt={`${project.title} screenshot ${imgIdx + 1}`} fill style={{ objectFit: 'cover' }} sizes="(max-width: 768px) 100vw, 50vw" />
-                    </div>
-                  </motion.div>
+                  <Polaroid3D 
+                    key={imgIdx}
+                    src={img}
+                    alt={`${project.title} screenshot ${imgIdx + 1}`}
+                    initialRotation={rotations[(i + imgIdx) % rotations.length]}
+                  />
                 ))}
               </div>
               {/* Handwritten caption */}

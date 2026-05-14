@@ -24,21 +24,53 @@ interface Experience {
 }
 
 export default function AdminPage() {
-  const [tab, setTab] = useState<'projects' | 'experience'>('projects');
+  const [tab, setTab] = useState<'projects' | 'experience' | 'cv'>('projects');
   const [projects, setProjects] = useState<Project[]>([]);
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [uploading, setUploading] = useState(false);
   const [status, setStatus] = useState('');
+  const [cvUrl, setCvUrl] = useState<string | null>(null);
+  const [cvUploading, setCvUploading] = useState(false);
 
   // Project form
   const [pForm, setPForm] = useState<Project>({ title: '', description: '', stack: '', category: '', link: '', images: [] });
+  const [editingProjectId, setEditingProjectId] = useState<number | null>(null);
+
   // Experience form
   const [eForm, setEForm] = useState<Experience>({ role: '', company: '', period: '', description: '', tags: '' });
+  const [editingExperienceId, setEditingExperienceId] = useState<number | null>(null);
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
 
   useEffect(() => {
     fetchProjects();
     fetchExperiences();
+    fetchCvUrl();
   }, []);
+
+  async function fetchCvUrl() {
+    const { data } = await supabase.from('settings').select('value').eq('key', 'cv_url').single();
+    if (data) setCvUrl(data.value);
+  }
+
+  async function handleCvUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!e.target.files?.[0]) return;
+    setCvUploading(true);
+    const file = e.target.files[0];
+    const fileName = `cv-${Date.now()}.pdf`;
+    // Remove old CV if exists
+    await supabase.storage.from('project-images').remove([fileName]);
+    const { data, error } = await supabase.storage.from('project-images').upload(fileName, file, { upsert: true });
+    if (error) { setStatus(`CV upload error: ${error.message}`); setCvUploading(false); return; }
+    const { data: urlData } = supabase.storage.from('project-images').getPublicUrl(data.path);
+    const publicUrl = urlData.publicUrl;
+    // Upsert into settings table
+    await supabase.from('settings').upsert({ key: 'cv_url', value: publicUrl });
+    setCvUrl(publicUrl);
+    setStatus('CV uploaded successfully!');
+    setCvUploading(false);
+  }
 
   async function fetchProjects() {
     const { data } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
@@ -70,13 +102,28 @@ export default function AdminPage() {
     setUploading(false);
   }
 
-  async function addProject() {
+  async function addOrUpdateProject() {
     if (!pForm.title) { setStatus('Title is required'); return; }
-    const { error } = await supabase.from('projects').insert({ ...pForm, images: JSON.stringify(pForm.images) });
-    if (error) { setStatus(`Error: ${error.message}`); return; }
-    setStatus('Project added!');
+    
+    if (editingProjectId) {
+      const { error } = await supabase.from('projects').update({ ...pForm, images: JSON.stringify(pForm.images) }).eq('id', editingProjectId);
+      if (error) { setStatus(`Error: ${error.message}`); return; }
+      setStatus('Project updated!');
+      setEditingProjectId(null);
+    } else {
+      const { error } = await supabase.from('projects').insert({ ...pForm, images: JSON.stringify(pForm.images) });
+      if (error) { setStatus(`Error: ${error.message}`); return; }
+      setStatus('Project added!');
+    }
+    
     setPForm({ title: '', description: '', stack: '', category: '', link: '', images: [] });
     fetchProjects();
+  }
+
+  function startEditProject(p: Project) {
+    setPForm(p);
+    setEditingProjectId(p.id!);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   async function deleteProject(id: number) {
@@ -84,13 +131,28 @@ export default function AdminPage() {
     fetchProjects();
   }
 
-  async function addExperience() {
+  async function addOrUpdateExperience() {
     if (!eForm.role) { setStatus('Role is required'); return; }
-    const { error } = await supabase.from('experiences').insert(eForm);
-    if (error) { setStatus(`Error: ${error.message}`); return; }
-    setStatus('Experience added!');
+
+    if (editingExperienceId) {
+      const { error } = await supabase.from('experiences').update(eForm).eq('id', editingExperienceId);
+      if (error) { setStatus(`Error: ${error.message}`); return; }
+      setStatus('Experience updated!');
+      setEditingExperienceId(null);
+    } else {
+      const { error } = await supabase.from('experiences').insert(eForm);
+      if (error) { setStatus(`Error: ${error.message}`); return; }
+      setStatus('Experience added!');
+    }
+    
     setEForm({ role: '', company: '', period: '', description: '', tags: '' });
     fetchExperiences();
+  }
+
+  function startEditExperience(e: Experience) {
+    setEForm(e);
+    setEditingExperienceId(e.id!);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   async function deleteExperience(id: number) {
@@ -100,6 +162,33 @@ export default function AdminPage() {
 
   const inputStyle: React.CSSProperties = { width: '100%', padding: '0.7rem 1rem', border: '2px solid #e0d8cc', borderRadius: '6px', background: '#faf8f5', fontSize: '0.9rem', fontFamily: "'Space Grotesk', sans-serif", outline: 'none', transition: 'border-color 0.2s' };
   const labelStyle: React.CSSProperties = { fontSize: '0.8rem', fontWeight: 600, color: '#555', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.3rem', display: 'block' };
+
+  if (!isAuthenticated) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f2ede4', padding: '1rem' }}>
+        <div className="paper-card" style={{ padding: '3rem', width: '100%', maxWidth: '400px', textAlign: 'center' }}>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2rem', marginBottom: '1.5rem', color: '#1a1a1a' }}>Admin Access</h2>
+          <input 
+            type="password" 
+            value={password} 
+            onChange={e => setPassword(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter' && password === 'Ishola0104') setIsAuthenticated(true); else if (e.key === 'Enter') alert('Incorrect password'); }}
+            placeholder="Enter admin password"
+            style={{ ...inputStyle, marginBottom: '1.5rem', textAlign: 'center' }}
+          />
+          <button 
+            onClick={() => { if (password === 'Ishola0104') setIsAuthenticated(true); else alert('Incorrect password'); }}
+            style={{ width: '100%', background: '#1a1a1a', color: '#faf8f5', padding: '0.8rem', border: 'none', borderRadius: '4px', fontWeight: 700, cursor: 'pointer', transition: 'background 0.2s' }}
+            onMouseOver={e => e.currentTarget.style.background = '#e8913a'}
+            onMouseOut={e => e.currentTarget.style.background = '#1a1a1a'}
+          >
+            Login
+          </button>
+          <p style={{ fontFamily: "'Caveat', cursive", color: '#d94f4f', marginTop: '1.5rem', fontSize: '1.1rem' }}>Restricted area 🛑</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ minHeight: '100vh', background: '#f2ede4', padding: '6rem 5% 3rem' }}>
@@ -115,13 +204,42 @@ export default function AdminPage() {
 
         {/* Tabs */}
         <div style={{ display: 'flex', gap: '0', marginBottom: '2rem', borderBottom: '2px solid #e0d8cc' }}>
-          {(['projects', 'experience'] as const).map(t => (
+          {(['projects', 'experience', 'cv'] as const).map(t => (
             <button key={t} onClick={() => setTab(t)}
               style={{ padding: '0.75rem 2rem', fontWeight: 700, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em', border: 'none', borderBottom: tab === t ? '3px solid #e8913a' : '3px solid transparent', background: 'none', color: tab === t ? '#1a1a1a' : '#999', cursor: 'pointer', fontFamily: "'Space Grotesk', sans-serif", transition: 'all 0.2s', marginBottom: '-2px' }}>
-              {t === 'projects' ? '🎨 Projects' : '💼 Experience'}
+              {t === 'projects' ? '🎨 Projects' : t === 'experience' ? '💼 Experience' : '📄 CV / Resume'}
             </button>
           ))}
         </div>
+
+        {/* CV TAB */}
+        {tab === 'cv' && (
+          <div>
+            <div style={{ background: '#faf8f5', border: '2px solid #e0d8cc', borderRadius: '8px', padding: '2.5rem', textAlign: 'center' }}>
+              <h3 style={{ fontFamily: "'Caveat', cursive", fontSize: '1.8rem', marginBottom: '0.5rem' }}>📄 Upload Your CV / Resume</h3>
+              <p style={{ color: '#777', fontSize: '0.9rem', marginBottom: '2rem' }}>Upload a PDF — it will instantly update the Download CV button on your portfolio.</p>
+
+              <label style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', border: '2px dashed #e0d8cc', borderRadius: '8px', padding: '2.5rem 3rem', cursor: 'pointer', transition: 'border-color 0.2s', background: '#fff' }}
+                onMouseOver={e => (e.currentTarget.style.borderColor = '#e8913a')}
+                onMouseOut={e => (e.currentTarget.style.borderColor = '#e0d8cc')}>
+                <Upload size={36} color="#e8913a" />
+                <span style={{ fontWeight: 700, color: '#1a1a1a' }}>{cvUploading ? 'Uploading...' : 'Click to Upload PDF'}</span>
+                <span style={{ fontSize: '0.8rem', color: '#999' }}>PDF files only</span>
+                <input type="file" accept=".pdf" onChange={handleCvUpload} style={{ display: 'none' }} disabled={cvUploading} />
+              </label>
+
+              {cvUrl && (
+                <div style={{ marginTop: '2rem', padding: '1.25rem', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px' }}>
+                  <p style={{ color: '#166534', fontWeight: 600, marginBottom: '0.75rem' }}>✅ CV currently live:</p>
+                  <a href={cvUrl} target="_blank" rel="noopener noreferrer"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#4a8fe7', fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.85rem', wordBreak: 'break-all' }}>
+                    <ExternalLink size={14} /> View Current CV
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* PROJECTS TAB */}
         {tab === 'projects' && (
@@ -161,12 +279,18 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              <button onClick={addProject}
+              <button onClick={addOrUpdateProject}
                 style={{ marginTop: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#1a1a1a', color: '#faf8f5', padding: '0.75rem 2rem', border: 'none', fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer', borderRadius: '4px', transition: 'background 0.2s' }}
                 onMouseOver={e => e.currentTarget.style.background = '#e8913a'}
                 onMouseOut={e => e.currentTarget.style.background = '#1a1a1a'}>
-                <Plus size={16} /> Add Project
+                <Plus size={16} /> {editingProjectId ? 'Update Project' : 'Add Project'}
               </button>
+              {editingProjectId && (
+                <button onClick={() => { setEditingProjectId(null); setPForm({ title: '', description: '', stack: '', category: '', link: '', images: [] }); }}
+                  style={{ marginTop: '1.5rem', marginLeft: '1rem', background: 'transparent', color: '#1a1a1a', padding: '0.75rem 2rem', border: '2px solid #1a1a1a', fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer', borderRadius: '4px' }}>
+                  Cancel Edit
+                </button>
+              )}
             </div>
 
             {/* Existing projects */}
@@ -183,7 +307,10 @@ export default function AdminPage() {
                   {p.images.length > 0 && <p style={{ fontSize: '0.75rem', color: '#4a8fe7' }}>📷 {p.images.length} image(s)</p>}
                   {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.8rem', color: '#4a8fe7', display: 'flex', alignItems: 'center', gap: '0.3rem' }}><ExternalLink size={12} /> {p.link}</a>}
                 </div>
-                <button onClick={() => deleteProject(p.id!)} style={{ background: 'none', border: 'none', color: '#d94f4f', cursor: 'pointer', padding: '0.5rem' }}><Trash2 size={18} /></button>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button onClick={() => startEditProject(p)} style={{ background: 'none', border: 'none', color: '#4a8fe7', cursor: 'pointer', padding: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Edit</button>
+                  <button onClick={() => deleteProject(p.id!)} style={{ background: 'none', border: 'none', color: '#d94f4f', cursor: 'pointer', padding: '0.5rem' }}><Trash2 size={18} /></button>
+                </div>
               </div>
             ))}
           </div>
@@ -201,12 +328,18 @@ export default function AdminPage() {
                 <div><label style={labelStyle}>Tags (comma-separated)</label><input style={inputStyle} value={eForm.tags} onChange={e => setEForm({...eForm, tags: e.target.value})} placeholder="Figma, UI/UX, Prototyping" /></div>
                 <div style={{ gridColumn: 'span 2' }}><label style={labelStyle}>Description</label><textarea style={{...inputStyle, minHeight: '80px', resize: 'vertical'}} value={eForm.description} onChange={e => setEForm({...eForm, description: e.target.value})} placeholder="What did you do?" /></div>
               </div>
-              <button onClick={addExperience}
+              <button onClick={addOrUpdateExperience}
                 style={{ marginTop: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#1a1a1a', color: '#faf8f5', padding: '0.75rem 2rem', border: 'none', fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer', borderRadius: '4px', transition: 'background 0.2s' }}
                 onMouseOver={e => e.currentTarget.style.background = '#e8913a'}
                 onMouseOut={e => e.currentTarget.style.background = '#1a1a1a'}>
-                <Plus size={16} /> Add Experience
+                <Plus size={16} /> {editingExperienceId ? 'Update Experience' : 'Add Experience'}
               </button>
+              {editingExperienceId && (
+                <button onClick={() => { setEditingExperienceId(null); setEForm({ role: '', company: '', period: '', description: '', tags: '' }); }}
+                  style={{ marginTop: '1.5rem', marginLeft: '1rem', background: 'transparent', color: '#1a1a1a', padding: '0.75rem 2rem', border: '2px solid #1a1a1a', fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer', borderRadius: '4px' }}>
+                  Cancel Edit
+                </button>
+              )}
             </div>
 
             <h3 style={{ fontFamily: "'Caveat', cursive", fontSize: '1.5rem', marginBottom: '1rem' }}>📋 Your Experience ({experiences.length})</h3>
@@ -218,7 +351,10 @@ export default function AdminPage() {
                   <p style={{ fontSize: '0.9rem', color: '#e8913a', fontWeight: 600 }}>{exp.company} — {exp.period}</p>
                   <p style={{ fontSize: '0.85rem', color: '#777', marginTop: '0.25rem' }}>{exp.description}</p>
                 </div>
-                <button onClick={() => deleteExperience(exp.id!)} style={{ background: 'none', border: 'none', color: '#d94f4f', cursor: 'pointer', padding: '0.5rem' }}><Trash2 size={18} /></button>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button onClick={() => startEditExperience(exp)} style={{ background: 'none', border: 'none', color: '#4a8fe7', cursor: 'pointer', padding: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Edit</button>
+                  <button onClick={() => deleteExperience(exp.id!)} style={{ background: 'none', border: 'none', color: '#d94f4f', cursor: 'pointer', padding: '0.5rem' }}><Trash2 size={18} /></button>
+                </div>
               </div>
             ))}
           </div>

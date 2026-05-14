@@ -42,5 +42,26 @@ CREATE POLICY "Auth update experiences" ON experiences FOR UPDATE USING (true);
 CREATE POLICY "Auth delete experiences" ON experiences FOR DELETE USING (true);
 
 -- ===== STORAGE BUCKET FOR PROJECT IMAGES =====
--- Go to Storage in Supabase Dashboard and create a bucket called "project-images"
--- Set it to Public so images can be displayed on the portfolio
+-- Create the storage bucket for images
+INSERT INTO storage.buckets (id, name, public) 
+VALUES ('project-images', 'project-images', true) 
+ON CONFLICT (id) DO NOTHING;
+
+-- Allow public read access to the bucket
+CREATE POLICY "Public Object Access" ON storage.objects FOR SELECT USING (bucket_id = 'project-images');
+
+-- Allow authenticated uploads
+CREATE POLICY "Auth Object Upload" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'project-images');
+CREATE POLICY "Auth Object Delete" ON storage.objects FOR DELETE USING (bucket_id = 'project-images');
+
+-- ===== SETTINGS TABLE (for CV URL and other site settings) =====
+CREATE TABLE IF NOT EXISTS settings (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE settings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public read settings" ON settings FOR SELECT USING (true);
+CREATE POLICY "Auth upsert settings" ON settings FOR INSERT WITH CHECK (true);
+CREATE POLICY "Auth update settings" ON settings FOR UPDATE USING (true);

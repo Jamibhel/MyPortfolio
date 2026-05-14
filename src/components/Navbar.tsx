@@ -35,9 +35,10 @@ export default function Navbar() {
         style={{
           position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 100,
           padding: '0.8rem 5%',
-          background: scrolled ? 'rgba(242, 237, 228, 0.92)' : 'transparent',
-          backdropFilter: scrolled ? 'blur(10px)' : 'none',
-          borderBottom: scrolled ? '1px solid rgba(0,0,0,0.06)' : 'none',
+          background: scrolled ? 'rgba(255, 255, 255, 0.4)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(16px)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'none',
+          borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.3)' : 'none',
           transition: 'all 0.3s',
           display: 'flex', justifyContent: 'space-between', alignItems: 'center'
         }}
@@ -64,7 +65,7 @@ export default function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            style={{ position: 'fixed', inset: 0, background: 'rgba(242,237,228,0.98)', zIndex: 99, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '2.5rem' }}>
+            style={{ position: 'fixed', inset: 0, background: 'rgba(255,255,255,0.4)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', zIndex: 99, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '2.5rem' }}>
             {NAV_LINKS.map((link, i) => (
               <motion.a key={link.href} onClick={() => handleNav(link.href)} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
                 style={{ cursor: 'pointer', color: '#1a1a1a', fontSize: '2rem', fontFamily: "'Caveat', cursive", fontWeight: 700 }}>

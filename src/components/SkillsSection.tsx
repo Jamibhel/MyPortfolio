@@ -75,7 +75,9 @@ export default function SkillsSection() {
 
         {/* RIGHT: Soft skills on sticky note */}
         <div>
-          <motion.div initial={{ opacity: 0, rotate: 5, y: 30 }} whileInView={{ opacity: 1, rotate: 2, y: 0 }} viewport={{ once: true }}
+          <motion.div initial={{ opacity: 0, rotate: 5, y: 30 }} 
+            whileInView={{ opacity: 1, rotate: 2, y: 0 }} 
+            viewport={{ once: true }}
             className="sticky-note sticky-yellow" style={{ padding: '1.5rem', marginTop: '4rem', position: 'relative' }}>
             <div className="pin" style={{ top: '-7px', right: '20px' }} />
             <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem', borderBottom: '2px dashed rgba(0,0,0,0.15)', paddingBottom: '0.5rem' }}>

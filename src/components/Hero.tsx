@@ -1,7 +1,10 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Download, Mail, Phone } from 'lucide-react';
+import Hero3DObjects from './Hero3DObjects';
+import { supabase } from '@/lib/supabase';
 
 function GithubIcon() {
   return <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>;
@@ -11,9 +14,18 @@ function LinkedinIcon() {
 }
 
 export default function Hero() {
+  const [cvUrl, setCvUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase.from('settings').select('value').eq('key', 'cv_url').single()
+      .then(({ data }) => { if (data) setCvUrl(data.value); });
+  }, []);
+
   return (
     <section id="home" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', padding: '6rem 5% 4rem', position: 'relative', overflow: 'hidden' }}>
       
+      <Hero3DObjects />
+
       {/* Scattered decorative elements */}
       <div className="coffee-stain" style={{ top: '15%', right: '8%' }} />
       <motion.p initial={{ opacity: 0 }} animate={{ opacity: 0.15 }} transition={{ delay: 1 }} style={{ position: 'absolute', top: '12%', right: '5%', fontFamily: "'Caveat', cursive", fontSize: '6rem', color: '#e8913a', transform: 'rotate(12deg)', pointerEvents: 'none', fontWeight: 700 }}>
@@ -24,46 +36,54 @@ export default function Hero() {
         
         {/* LEFT — Main intro on paper */}
         <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-          {/* Paper card with torn top */}
-          <div className="paper-card" style={{ padding: '3rem 2.5rem 2.5rem', position: 'relative' }}>
-            {/* Washi tape */}
-            <div className="washi-tape washi-pink" style={{ width: '100px', top: '-12px', left: '40px', transform: 'rotate(-4deg)' }} />
-            <div className="tape tape-sm" style={{ top: '-12px', right: '50px', transform: 'rotate(5deg)' }} />
-            
-            {/* Paper clip */}
-            <div className="paper-clip" style={{ top: '-15px', right: '20px' }} />
+          {/* Paper card with crumpled texture */}
+          <motion.div 
+            animate={{ rotateZ: [0, 0.5, -0.2, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ transformOrigin: 'top left' }}
+          >
+            <div className="crumpled-paper" style={{ padding: '3rem 2.5rem 2.5rem', position: 'relative' }}>
+              {/* Washi tape */}
+              <div className="washi-tape washi-pink" style={{ width: '100px', top: '-12px', left: '40px', transform: 'rotate(-4deg)' }} />
+              <div className="tape tape-sm" style={{ top: '-12px', right: '50px', transform: 'rotate(5deg)' }} />
+              
+              {/* Paper clip */}
+              <div className="paper-clip" style={{ top: '-15px', right: '20px' }} />
 
-            <p style={{ fontFamily: "var(--handwritten)", fontSize: '1.4rem', color: 'var(--ink-light)', marginBottom: '0.3rem' }}>Hello, I&apos;m</p>
-            
-            <h1 style={{ fontFamily: "var(--serif)", fontSize: 'clamp(2.8rem, 5vw, 4rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.03em', color: 'var(--ink-black)', marginBottom: '0.75rem' }}>
-              Bello Jamiu<br/>Muhammad
-            </h1>
-            
-            {/* Highlighted role */}
-            <p style={{ fontFamily: "var(--handwritten)", fontSize: '1.5rem', marginBottom: '1.5rem' }}>
-              <span style={{ background: 'linear-gradient(transparent 50%, rgba(245,200,66,0.4) 50%)', padding: '0 4px' }}>UI/UX Designer</span>
-              {' '}&amp;{' '}
-              <span style={{ background: 'linear-gradient(transparent 50%, rgba(74,143,231,0.3) 50%)', padding: '0 4px' }}>Full-Stack Developer</span>
-            </p>
+              <p style={{ fontFamily: "var(--handwritten)", fontSize: '1.4rem', color: 'var(--ink-light)', marginBottom: '0.3rem' }}>Hello, I&apos;m</p>
+              
+              <h1 style={{ fontFamily: "var(--serif)", fontSize: 'clamp(2.8rem, 5vw, 4rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.03em', color: 'var(--ink-black)', marginBottom: '0.75rem' }}>
+                Bello Jamiu<br/>Muhammad
+              </h1>
+              
+              {/* Highlighted role */}
+              <p style={{ fontFamily: "var(--handwritten)", fontSize: '1.5rem', marginBottom: '1.5rem' }}>
+                <span style={{ background: 'linear-gradient(transparent 50%, rgba(245,200,66,0.4) 50%)', padding: '0 4px' }}>UI/UX Designer</span>
+                {' '}&amp;{' '}
+                <span style={{ background: 'linear-gradient(transparent 50%, rgba(74,143,231,0.3) 50%)', padding: '0 4px' }}>Full-Stack Developer</span>
+              </p>
 
-            <p style={{ color: 'var(--ink-gray)', lineHeight: 1.7, fontSize: '0.95rem', marginBottom: '2rem', maxWidth: '500px' }}>
-              I blend creative design with technical engineering to craft beautiful, user-centered digital experiences — from intuitive interfaces to robust mobile and web platforms.
-            </p>
+              <p style={{ color: 'var(--ink-gray)', lineHeight: 1.7, fontSize: '0.95rem', marginBottom: '2rem', maxWidth: '500px' }}>
+                I blend creative design with technical engineering to craft beautiful, user-centered digital experiences — from intuitive interfaces to robust mobile and web platforms.
+              </p>
 
-            {/* CTA buttons */}
-            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
-              <a href="/resume.pdf" download style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--ink-black)', color: 'var(--paper-white)', padding: '0.75rem 1.6rem', fontWeight: 700, fontSize: '0.85rem', letterSpacing: '0.05em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s' }}
-                onMouseOver={(e) => { e.currentTarget.style.background = '#e8913a'; }} onMouseOut={(e) => { e.currentTarget.style.background = '#1a1a1a'; }}>
-                <Download size={15} /> Download CV
-              </a>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <SocialPill href="mailto:jamibelbhello0104@gmail.com"><Mail size={16} /></SocialPill>
-                <SocialPill href="https://github.com/Jamibhel"><GithubIcon /></SocialPill>
-                <SocialPill href="https://www.linkedin.com/in/bello-muh-jamiu-ishola-10371724a"><LinkedinIcon /></SocialPill>
-                <SocialPill href="tel:+2349050955981"><Phone size={16} /></SocialPill>
+              {/* CTA buttons */}
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                <a href={cvUrl || '#'} download={!!cvUrl} target={cvUrl ? '_blank' : undefined} rel="noopener noreferrer"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: cvUrl ? 'var(--ink-black)' : '#aaa', color: 'var(--paper-white)', padding: '0.75rem 1.6rem', fontWeight: 700, fontSize: '0.85rem', letterSpacing: '0.05em', textTransform: 'uppercase', cursor: cvUrl ? 'pointer' : 'not-allowed', transition: 'all 0.2s' }}
+                  onMouseOver={(e) => { if (cvUrl) e.currentTarget.style.background = '#e8913a'; }}
+                  onMouseOut={(e) => { if (cvUrl) e.currentTarget.style.background = '#1a1a1a'; }}>
+                  <Download size={15} /> {cvUrl ? 'Download CV' : 'CV Coming Soon'}
+                </a>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <SocialPill href="mailto:jamibelbhello0104@gmail.com"><Mail size={16} /></SocialPill>
+                  <SocialPill href="https://github.com/Jamibhel"><GithubIcon /></SocialPill>
+                  <SocialPill href="https://www.linkedin.com/in/bello-muh-jamiu-ishola-10371724a"><LinkedinIcon /></SocialPill>
+                  <SocialPill href="https://wa.me/2349050955981"><Phone size={16} /></SocialPill>
+                </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Handwritten annotation below */}
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
@@ -78,15 +98,20 @@ export default function Hero() {
           {/* Photo placeholder */}
           <motion.div initial={{ opacity: 0, rotate: 8 }} animate={{ opacity: 1, rotate: 4 }} transition={{ delay: 0.3, duration: 0.7 }}
             className="photo-frame" style={{ position: 'absolute', top: '0', right: '10px', width: '220px', zIndex: 2 }}>
-            <div style={{ width: '100%', aspectRatio: '3/4', background: '#e8e0d4', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '0.5rem' }}>
-              <span style={{ fontSize: '2.5rem' }}>📷</span>
-              <span style={{ fontFamily: "var(--handwritten)", color: '#999', fontSize: '1.1rem' }}>Your Photo Here</span>
+            <div style={{ position: 'relative', width: '100%', aspectRatio: '3/4', background: '#e8e0d4', overflow: 'hidden' }}>
+              <img src="/profile.jpg" alt="Bello Jamiu Muhammad" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             <p style={{ fontFamily: "var(--handwritten)", fontSize: '1rem', color: '#888', textAlign: 'center', padding: '6px 0 4px' }}>Jamiu — 2024</p>
           </motion.div>
 
           {/* Contact sticky */}
-          <motion.div initial={{ opacity: 0, rotate: -8 }} animate={{ opacity: 1, rotate: -3 }} transition={{ delay: 0.5 }}
+          <motion.div initial={{ opacity: 0, rotate: -8 }} 
+            animate={{ 
+              opacity: 1, 
+              rotate: [-3, -4, -2, -3],
+              y: [0, -2, 1, 0]
+            }} 
+            transition={{ delay: 0.5, duration: 4, repeat: Infinity, ease: "easeInOut" }}
             className="sticky-note sticky-orange" style={{ position: 'absolute', top: '80px', left: '0', width: '170px', zIndex: 1 }}>
             <p style={{ fontWeight: 700, marginBottom: '0.3rem', fontSize: '1.2rem' }}>📮 Reach out!</p>
             <p style={{ fontSize: '0.95rem' }}>Open for freelance<br/>& collaborations</p>
