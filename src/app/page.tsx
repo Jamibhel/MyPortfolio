@@ -2,6 +2,7 @@ import Hero from '@/components/Hero';
 import ExperienceTimeline from '@/components/ExperienceTimeline';
 import SkillsSection from '@/components/SkillsSection';
 import ProjectsGrid from '@/components/ProjectsGrid';
+import Footer from '@/components/Footer';
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
       <ExperienceTimeline />
       <SkillsSection />
       <ProjectsGrid />
+      <Footer />
     </main>
   );
 }

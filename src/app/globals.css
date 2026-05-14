@@ -4,12 +4,17 @@
   --bg-color: #0f172a;
   --text-main: #f8fafc;
   --accent-primary: #38bdf8;
+  --accent-secondary: #818cf8;
 }
 
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -22,4 +27,19 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* Responsive nav */
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none !important;
+  }
+  .mobile-toggle {
+    display: flex !important;
+  }
+}
+
+/* Smooth section scroll offset for fixed navbar */
+section[id] {
+  scroll-margin-top: 80px;
 }

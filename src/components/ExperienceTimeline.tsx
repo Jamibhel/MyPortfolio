@@ -7,27 +7,27 @@ import { supabase } from '@/lib/supabase';
 const EXPERIENCES = [
   {
     id: 1,
-    role: 'Senior Design Engineer',
-    company: 'Tech Innovators Inc.',
-    period: '2024 - Present',
-    description: 'Bridging the gap between design and engineering. Leading the UI architecture for a suite of enterprise AI products, ensuring pixel-perfect implementation of complex Figma prototypes while optimizing React rendering performance.',
-    tags: ['React', 'Next.js', 'Framer Motion', 'Figma']
+    role: 'UI/UX Designer',
+    company: 'ForteSofte Niit',
+    period: '1 Year',
+    description: 'Designed intuitive user interfaces and crafted engaging user experiences. Focused on applying modern design principles like glassmorphism and ensuring seamless interactions.',
+    tags: ['Figma', 'UI/UX', 'Prototyping', 'Wireframing']
   },
   {
     id: 2,
-    role: 'Frontend Developer & UI Designer',
-    company: 'Creative Web Agency',
-    period: '2022 - 2024',
-    description: 'Designed and developed highly interactive marketing websites. Specialized in WebGL experiences and micro-interactions that increased user engagement by 40%.',
-    tags: ['Three.js', 'WebGL', 'GSAP', 'UI/UX']
+    role: 'Mobile App Developer',
+    company: 'ForteSofte Niit',
+    period: 'Concurrent',
+    description: 'Developed and maintained mobile applications. Handled the technical implementation of complex features including chatting systems and community feeds.',
+    tags: ['Android Studio', 'Java', 'Firebase', 'Mobile Dev']
   },
   {
     id: 3,
-    role: 'Software Engineer',
-    company: 'StartupX',
-    period: '2020 - 2022',
-    description: 'Built scalable backend services and responsive frontend dashboards. Streamlined the CI/CD pipelines and introduced modern testing practices.',
-    tags: ['TypeScript', 'Node.js', 'React', 'Jest']
+    role: 'Network Engineer (Home Automation)',
+    company: 'V2D Convergence',
+    period: '6 Months',
+    description: 'Managed both on-site and off-site home automation and networking tasks. Ensured reliable connectivity and seamless convergence of smart home systems.',
+    tags: ['Networking', 'Hardware', 'Home Automation']
   }
 ];
 
@@ -49,8 +49,9 @@ export default function ExperienceTimeline() {
     }
     fetchExperiences();
   }, []);
+
   return (
-    <section style={{ padding: '5rem 5%', maxWidth: '1000px', margin: '0 auto' }}>
+    <section id="experience" style={{ padding: '5rem 5%', maxWidth: '1000px', margin: '0 auto' }}>
       <motion.h2 
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
