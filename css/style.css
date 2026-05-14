@@ -1,0 +1,172 @@
+:root {
+    --bg-color: #0a0a0a;
+    --text-main: #f0f0f0;
+    --accent-pink: #FF2A6D;
+    --accent-cyan: #05D9E8;
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-mono: 'Fira Code', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: var(--font-heading);
+    overflow-x: hidden;
+    cursor: none;
+}
+#bg-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.content {
+    position: relative;
+    z-index: 1;
+    padding: 2rem 5%;
+}
+.hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+.glitch-text {
+    font-size: clamp(3rem, 8vw, 8rem);
+    font-weight: 700;
+    color: var(--text-main);
+    text-transform: uppercase;
+    position: relative;
+    text-shadow: 2px 2px var(--accent-pink), -2px -2px var(--accent-cyan);
+}
+.subtitle {
+    font-family: var(--font-mono);
+    color: #aaa;
+    margin-top: 1rem;
+    font-size: 1.2rem;
+}
+#custom-cursor {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--accent-pink);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease-out;
+    transform: translate(-50%, -50%);
+}
+
+.section-title {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: var(--accent-cyan);
+    border-bottom: 2px solid #333;
+    padding-bottom: 0.5rem;
+}
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+    padding-bottom: 5rem;
+}
+.project-card {
+    background: #111;
+    border: 2px solid #333;
+    height: 300px;
+    cursor: none;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transform-style: preserve-3d;
+}
+.project-card:hover {
+    border-color: var(--accent-pink);
+    box-shadow: 10px 10px 0 var(--accent-pink);
+    transform: translateY(-5px) scale(1.02);
+}
+.card-inner {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+}
+.card-inner h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+.card-inner p { font-family: var(--font-mono); color: #888; font-size: 0.9rem; }
+
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    overflow-y: auto;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+.modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+.modal-content {
+    background: #111;
+    max-width: 800px;
+    margin: 5% auto;
+    border: 2px solid var(--accent-cyan);
+    box-shadow: 15px 15px 0 rgba(5, 217, 232, 0.2);
+    position: relative;
+}
+.close-btn {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    background: none; border: none;
+    color: var(--accent-pink);
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    cursor: none;
+}
+.modal-body { padding: 3rem 2rem; }
+.ui-mockup-placeholder {
+    height: 300px; background: #222;
+    display: flex; align-items: center; justify-content: center;
+    margin: 2rem 0; border: 1px dashed #444;
+}
+.tech-deep-dive { margin-top: 3rem; }
+.tech-deep-dive pre {
+    background: #000; padding: 1.5rem;
+    border-left: 3px solid var(--accent-pink);
+    font-family: var(--font-mono); color: #0f0;
+    overflow-x: auto;
+}
+
+.terminal-footer {
+    max-width: 600px;
+    margin: 4rem auto;
+    border: 1px solid #333;
+    border-radius: 5px;
+    overflow: hidden;
+    font-family: var(--font-mono);
+    background: #0a0a0a;
+}
+.terminal-header {
+    background: #222;
+    padding: 0.5rem 1rem;
+    color: #888;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #333;
+}
+.terminal-body {
+    padding: 1.5rem;
+    color: #ccc;
+    line-height: 1.6;
+}
+.prompt { color: var(--accent-pink); margin-right: 0.5rem; }
+.output { color: var(--accent-cyan); margin-left: 1rem; }
+.typing-cursor {
+    display: inline-block;
+    width: 10px;
+    animation: blink 1s step-end infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }

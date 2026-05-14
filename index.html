@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Engineer Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+    <div id="custom-cursor"></div>
+
+    <main class="content">
+        <section class="hero">
+            <h1 class="glitch-text" data-text="DESIGN ENGINEER">DESIGN ENGINEER</h1>
+            <p class="subtitle">Bridging the gap between beautiful aesthetics and robust architecture.</p>
+        </section>
+
+        <section class="projects">
+            <h2 class="section-title">Case Studies</h2>
+            <div class="projects-grid">
+                <div class="project-card" onclick="openProject('project1')">
+                    <div class="card-inner">
+                        <h3>Fintech Dashboard</h3>
+                        <p>UI Design & WebGL Data Vis</p>
+                    </div>
+                </div>
+                <div class="project-card" onclick="openProject('project2')">
+                    <div class="card-inner">
+                        <h3>AI Content Platform</h3>
+                        <p>Full-Stack Next.js & Brutalist UI</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="terminal-footer">
+            <div class="terminal-header">guest@portfolio: ~</div>
+            <div class="terminal-body">
+                <p><span class="prompt">$</span> ./contact.sh</p>
+                <p class="output">Email: hello@designengineer.com</p>
+                <p class="output">GitHub: github.com/designengineer</p>
+                <p><span class="prompt">$</span> <span class="typing-cursor">_</span></p>
+            </div>
+        </footer>
+    </main>
+
+    <div id="project-modal" class="modal hidden">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeProject()">[X] CLOSE</button>
+            <div class="modal-body">
+                <h2 id="modal-title">Project Title</h2>
+                <div class="ui-mockup-placeholder">UI Mockup Showcase</div>
+                <div class="tech-deep-dive">
+                    <h3>Under the Hood</h3>
+                    <pre><code id="modal-code">const engine = new Engine();
+engine.ignite();</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
