@@ -6,7 +6,7 @@ A personal portfolio for a Hybrid Design Engineer. The portfolio must showcase b
 ## Architecture & Tech Stack
 - **Core:** Vanilla HTML, CSS, and JavaScript. No heavy frameworks, ensuring ultra-fast load times and complete control over the DOM.
 - **Styling:** Vanilla CSS with CSS Variables for easy theming. 
-- **Animations:** Heavy use of native CSS animations, transitions, and Vanilla JS for complex interactive elements. Will use libraries like GSAP or pure JS for physics-based and scroll-triggered animations if needed, but vanilla is preferred.
+- **Animations & 3D:** Heavy use of native CSS animations, transitions, and Vanilla JS. Will integrate WebGL/Three.js (or a lightweight alternative like OGL) for optimized, high-performance 3D background animations and interactive 3D elements.
 
 ## Layout & Structure
 1. **Hero Section:**
@@ -32,9 +32,9 @@ A personal portfolio for a Hybrid Design Engineer. The portfolio must showcase b
 - **Vibe:** "Creative Hacker". It feels premium and technical but doesn't take itself too seriously. It uses brutalist borders and extreme micro-interactions.
 
 ## Animation Strategy
-- **"Loads and loads of crazy interactions"**:
-  - Magnetic buttons that pull toward the cursor.
-  - Marquee scrolling text for skills or section dividers.
-  - Text scrambling/glitch effects on load or hover.
-  - Smooth reveal animations as elements enter the viewport.
-  - Custom cursor that changes shape or color when interacting with different elements.
+- **"Loads and loads of crazy interactions" (Highly Optimized)**:
+  - **3D Vibe & WebGL:** An interactive 3D background (e.g., a subtle particle system, a wireframe terrain, or floating geometric primitives) that reacts to scroll and cursor movement, optimized to run at a buttery 60fps without draining laptop batteries.
+  - **Card Tilts:** 3D hover effects on project cards using CSS `transform: perspective() rotateX() rotateY()` or actual WebGL planes.
+  - **Magnetic Buttons:** Elements that pull toward the cursor with physics-based spring animations.
+  - **Glitch & Scramble:** Text scrambling/glitch effects on load or hover.
+  - **Custom Cursor:** A WebGL-driven or CSS-driven custom cursor that interacts with the 3D environment and DOM elements.
