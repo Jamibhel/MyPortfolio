@@ -53,10 +53,10 @@ export default function ExperienceTimeline() {
           const style = cardStyles[i % cardStyles.length];
           return (
             <motion.div key={exp.id}
-              initial={{ opacity: 0, y: 40, rotate: style.rotate * 3 }}
+              initial={{ opacity: 0, y: 20, rotate: style.rotate * 3 }}
               whileInView={{ opacity: 1, y: 0, rotate: style.rotate }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: i * 0.12 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: i * 0.08 }}
               className="paper-card"
               style={{ padding: '2rem 1.8rem', position: 'relative' }}>
 

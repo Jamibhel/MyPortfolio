@@ -38,7 +38,7 @@ export default function SkillsSection() {
         
         {/* LEFT: Technical skills as sticker board */}
         <div>
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }}
             style={{ marginBottom: '2rem' }}>
             <h2 style={{ fontFamily: "var(--serif)", fontSize: '2.2rem', fontWeight: 900, color: 'var(--ink-black)', display: 'inline' }}>
               <span style={{ background: 'linear-gradient(transparent 55%, rgba(92,178,112,0.3) 55%)' }}>Software Skills</span>
@@ -46,7 +46,7 @@ export default function SkillsSection() {
             <div style={{ width: '60px', height: '3px', background: 'var(--accent-green)', marginTop: '0.5rem' }} />
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }}
             className="paper-card" style={{ padding: '2rem', position: 'relative' }}>
             <div className="tape tape-md" style={{ top: '-12px', left: '40%', transform: 'rotate(-2deg)' }} />
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }} className="skills-grid">
@@ -54,8 +54,8 @@ export default function SkillsSection() {
                 <motion.div key={skill.name}
                   initial={{ opacity: 0, scale: 0.8 }}
                   whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.03 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ delay: i * 0.02 }}
                   whileHover={{ scale: 1.08, rotate: Math.random() > 0.5 ? 3 : -3 }}
                   style={{
                     display: 'flex', alignItems: 'center', gap: '0.4rem',
@@ -77,7 +77,7 @@ export default function SkillsSection() {
         <div>
           <motion.div initial={{ opacity: 0, rotate: 5, y: 30 }} 
             whileInView={{ opacity: 1, rotate: 2, y: 0 }} 
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-50px" }}
             className="sticky-note sticky-yellow" style={{ padding: '1.5rem', marginTop: '4rem', position: 'relative' }}>
             <div className="pin" style={{ top: '-7px', right: '20px' }} />
             <h3 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem', borderBottom: '2px dashed rgba(0,0,0,0.15)', paddingBottom: '0.5rem' }}>
