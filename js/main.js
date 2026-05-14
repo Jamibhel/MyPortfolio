@@ -30,9 +30,9 @@ geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
 const material = new THREE.PointsMaterial({
     size: 0.05,
-    color: 0x05D9E8,
+    color: 0xa5b4fc,
     transparent: true,
-    opacity: 0.8
+    opacity: 0.3
 });
 
 const particles = new THREE.Points(geometry, material);
