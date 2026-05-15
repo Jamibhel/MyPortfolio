@@ -3,23 +3,23 @@
 import { motion } from 'framer-motion';
 
 const SKILLS = [
-  { name: 'Figma', icon: '🎨', color: '#e8913a' },
-  { name: 'UI/UX', icon: '✏️', color: '#d94f4f' },
+  { name: 'Figma', icon: '🎨F', color: '#e8913a' },
+  { name: 'UI/UX', icon: '', color: '#d94f4f' },
   { name: 'React', icon: '⚛️', color: '#4a8fe7' },
   { name: 'Next.js', icon: '▲', color: '#1a1a1a' },
   { name: 'TypeScript', icon: '📘', color: '#3178c6' },
   { name: 'Tailwind', icon: '🌊', color: '#38bdf8' },
-  { name: 'Android Studio', icon: '📱', color: '#5cb270' },
+  { name: 'Android Studio', icon: 'A', color: '#5cb270' },
   { name: 'Java', icon: '☕', color: '#e8913a' },
   { name: 'Firebase', icon: '🔥', color: '#f5c842' },
   { name: 'Supabase', icon: '⚡', color: '#5cb270' },
-  { name: 'Node.js', icon: '🟢', color: '#5cb270' },
-  { name: 'Three.js', icon: '🧊', color: '#1a1a1a' },
+  { name: 'Node.js', icon: '', color: '#5cb270' },
+  { name: 'Three.js', icon: '', color: '#1a1a1a' },
   { name: 'Framer Motion', icon: '💫', color: '#e884a8' },
-  { name: 'Git', icon: '🔀', color: '#d94f4f' },
+  { name: 'Git', icon: '', color: '#d94f4f' },
   { name: 'Vercel', icon: '🚀', color: '#1a1a1a' },
-  { name: 'HTML/CSS', icon: '🌐', color: '#e8913a' },
-  { name: 'Prototyping', icon: '🖼️', color: '#4a8fe7' },
+  { name: 'HTML/CSS', icon: '', color: '#e8913a' },
+  { name: 'Prototyping', icon: '', color: '#4a8fe7' },
   { name: 'Wireframing', icon: '📐', color: '#777' },
 ];
 

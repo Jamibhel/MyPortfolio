@@ -19,6 +19,8 @@ interface Project {
 
 export default function ProjectsGrid() {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [activeFilter, setActiveFilter] = useState('All');
+  const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
     async function fetchProjects() {
@@ -29,10 +31,18 @@ export default function ProjectsGrid() {
           images: typeof p.images === 'string' ? JSON.parse(p.images) : (p.images || [])
         }));
         setProjects(parsed as Project[]);
+        
+        // Extract unique categories
+        const cats = Array.from(new Set(parsed.map(p => p.category || 'Other')));
+        setCategories(['All', ...cats]);
       }
     }
     fetchProjects();
   }, []);
+
+  const filteredProjects = activeFilter === 'All' 
+    ? projects 
+    : projects.filter(p => (p.category || 'Other') === activeFilter);
 
   const rotations = [1.5, -1, 0.5, -1.5, 1];
   const tapeColors = ['washi-pink', 'washi-blue', 'washi-green', 'washi-pink', 'washi-blue'];
@@ -53,12 +63,49 @@ export default function ProjectsGrid() {
         <p style={{ fontFamily: "var(--handwritten)", color: 'var(--ink-light)', fontSize: '1.3rem', marginTop: '0.5rem' }}>
           Projects I&apos;ve designed, developed, or both ↓
         </p>
+
+        {/* Filter System */}
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginTop: '2rem' }}>
+          {categories.map(cat => (
+            <button
+              key={cat}
+              onClick={() => setActiveFilter(cat)}
+              style={{
+                padding: '0.4rem 1.2rem',
+                borderRadius: '4px',
+                fontSize: '0.85rem',
+                fontWeight: 700,
+                border: activeFilter === cat ? '2px solid var(--ink-black)' : '2px dashed #ccc',
+                background: activeFilter === cat ? 'var(--ink-black)' : 'transparent',
+                color: activeFilter === cat ? 'var(--paper-white)' : 'var(--ink-gray)',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                fontFamily: 'var(--clean)'
+              }}
+              onMouseOver={(e) => {
+                if (activeFilter !== cat) {
+                  e.currentTarget.style.borderColor = 'var(--ink-black)';
+                  e.currentTarget.style.color = 'var(--ink-black)';
+                }
+              }}
+              onMouseOut={(e) => {
+                if (activeFilter !== cat) {
+                  e.currentTarget.style.borderColor = '#ccc';
+                  e.currentTarget.style.color = 'var(--ink-gray)';
+                }
+              }}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
       </motion.div>
 
       {/* Projects */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '5rem' }}>
-        {projects.map((project, i) => (
+        {filteredProjects.map((project, i) => (
           <motion.article key={project.id}
+            layout
             initial={{ opacity: 0, y: 60 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
