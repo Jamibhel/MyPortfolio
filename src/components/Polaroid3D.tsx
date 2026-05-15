@@ -10,9 +10,10 @@ interface Polaroid3DProps {
   initialRotation?: number;
   className?: string;
   style?: React.CSSProperties;
+  onClick?: () => void;
 }
 
-export default function Polaroid3D({ src, alt, initialRotation = 0, className = '', style = {} }: Polaroid3DProps) {
+export default function Polaroid3D({ src, alt, initialRotation = 0, className = '', style = {}, onClick }: Polaroid3DProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   // Mouse position values from -0.5 to 0.5
@@ -64,6 +65,7 @@ export default function Polaroid3D({ src, alt, initialRotation = 0, className = 
         onMouseMove={handleMouseMove}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        onClick={onClick}
         initial={{ rotate: initialRotation }}
         animate={{ 
           rotate: isHovered ? 0 : initialRotation,
@@ -78,10 +80,10 @@ export default function Polaroid3D({ src, alt, initialRotation = 0, className = 
           rotateX,
           rotateY,
           transformStyle: 'preserve-3d',
-          cursor: 'grab',
+          cursor: onClick ? 'zoom-in' : 'grab',
           position: 'relative'
         }}
-        whileTap={{ scale: 0.98, cursor: 'grabbing' }}
+        whileTap={{ scale: 0.98, cursor: onClick ? 'zoom-in' : 'grabbing' }}
       >
         {/* Floating Pin */}
         <div 

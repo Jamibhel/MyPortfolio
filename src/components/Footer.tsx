@@ -52,7 +52,7 @@ export default function Footer() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', padding: '1.5rem 0', borderTop: '1px solid rgba(0,0,0,0.08)' }}>
         <p style={{ fontFamily: "var(--handwritten)", color: 'var(--ink-gray)', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <span>© {new Date().getFullYear()} Bello Jamiu Muhammad ✦ Crafted with passion</span>
-          <a href="/🚫☠️🏴☠️" style={{ color: 'var(--accent-blue)', textDecoration: 'none', borderBottom: '1px dashed var(--accent-blue)', fontSize: '1rem' }}>Admin Panel</a>
+          <a href="/🚫☠️🏴☠️" style={{ color: 'var(--accent-blue)', textDecoration: 'none', borderBottom: '1px dashed var(--accent-blue)', fontSize: '1rem' }}>🚫☠️🏴☠️</a>
         </p>
         <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'var(--ink-black)', color: 'var(--paper-white)', border: 'none', padding: '0.5rem 1rem', fontFamily: "var(--handwritten)", fontSize: '1rem', cursor: 'pointer', transition: 'all 0.2s' }}
