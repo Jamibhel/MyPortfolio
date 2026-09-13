@@ -7,35 +7,34 @@ import { ExternalLink, X } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import Polaroid3D from './Polaroid3D';
 
-interface Project {
-  id: number;
-  title: string;
-  stack: string;
-  description: string;
-  category?: string;
-  link?: string;
-  images: string[]; // Array of image URLs
-}
+import { initialProjects, Project } from '@/data/projectsData';
 
 export default function ProjectsGrid() {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<Project[]>(initialProjects);
   const [activeFilter, setActiveFilter] = useState('All');
-  const [categories, setCategories] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>(() => {
+    const cats = Array.from(new Set(initialProjects.map(p => p.category || 'Other')));
+    return ['All', ...cats];
+  });
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchProjects() {
-      const { data } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
-      if (data && data.length > 0) {
-        const parsed = data.map(p => ({
-          ...p,
-          images: typeof p.images === 'string' ? JSON.parse(p.images) : (p.images || [])
-        }));
-        setProjects(parsed as Project[]);
-        
-        // Extract unique categories
-        const cats = Array.from(new Set(parsed.map(p => p.category || 'Other')));
-        setCategories(['All', ...cats]);
+      try {
+        const { data } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
+        if (data && data.length > 0) {
+          const parsed = data.map(p => ({
+            ...p,
+            images: typeof p.images === 'string' ? JSON.parse(p.images) : (p.images || [])
+          }));
+          setProjects(parsed as Project[]);
+          
+          // Extract unique categories
+          const cats = Array.from(new Set(parsed.map(p => p.category || 'Other')));
+          setCategories(['All', ...cats]);
+        }
+      } catch (err) {
+        console.warn('Could not fetch projects from Supabase, using static fallback.', err);
       }
     }
     fetchProjects();
