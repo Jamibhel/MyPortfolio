@@ -102,6 +102,7 @@ export default function Polaroid3D({ src, alt, initialRotation = 0, className = 
           position: 'relative', 
           width: '100%', 
           aspectRatio: '16/10', 
+          minHeight: '210px',
           background: '#e8e0d4', 
           overflow: 'hidden', 
           transform: 'translateZ(10px)' 

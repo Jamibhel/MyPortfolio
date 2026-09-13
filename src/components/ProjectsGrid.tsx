@@ -116,21 +116,34 @@ export default function ProjectsGrid() {
               style={{ display: 'flex', gap: '3rem', alignItems: 'flex-start', flexDirection: i % 2 === 0 ? 'row' : 'row-reverse' }}>
 
               {/* Images as 3D polaroids */}
-              <div style={{ flex: '1 1 55%', position: 'relative' }}>
-                <div className="project-images" style={{ display: 'grid', gridTemplateColumns: project.images.length > 1 ? '1fr 1fr' : '1fr', gap: '1rem' }}>
+              <div style={{ flex: '1 1 55%', position: 'relative', width: '100%', minWidth: 0 }}>
+                <div className="project-images" style={{ 
+                  display: 'flex', 
+                  gap: '1.25rem', 
+                  overflowX: 'auto', 
+                  paddingBottom: '0.75rem',
+                  alignItems: 'center',
+                  scrollSnapType: 'x mandatory',
+                  WebkitOverflowScrolling: 'touch'
+                }}>
                   {project.images.map((img, imgIdx) => (
-                    <Polaroid3D 
-                      key={imgIdx}
-                      src={img}
-                      alt={`${project.title} screenshot ${imgIdx + 1}`}
-                      initialRotation={rotations[(i + imgIdx) % rotations.length]}
-                      onClick={() => setSelectedImage(img)}
-                    />
+                    <div key={imgIdx} style={{ 
+                      flex: project.images.length > 1 ? '0 0 340px' : '1 1 100%', 
+                      minWidth: project.images.length > 1 ? '280px' : '100%',
+                      scrollSnapAlign: 'start'
+                    }}>
+                      <Polaroid3D 
+                        src={img}
+                        alt={`${project.title} screenshot ${imgIdx + 1}`}
+                        initialRotation={rotations[(i + imgIdx) % rotations.length]}
+                        onClick={() => setSelectedImage(img)}
+                      />
+                    </div>
                   ))}
                 </div>
                 {/* Handwritten caption */}
                 <p style={{ fontFamily: "var(--handwritten)", color: 'var(--ink-light)', fontSize: '1.1rem', textAlign: 'center', marginTop: '0.5rem', transform: `rotate(${rotations[i % rotations.length] * -1}deg)` }}>
-                  {project.category} ✦
+                  {project.category} {project.images.length > 1 ? '✦ Gallery (Swipe / Scroll →)' : '✦'}
                 </p>
               </div>
 

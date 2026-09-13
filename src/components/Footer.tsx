@@ -22,7 +22,6 @@ export default function Footer() {
         className="paper-card" style={{ padding: '3rem', position: 'relative', textAlign: 'center', marginBottom: '2rem' }}>
         <div className="washi-tape washi-pink" style={{ width: '120px', top: '-12px', left: '50%', marginLeft: '-60px', transform: 'rotate(-1deg)' }} />
         <div className="paper-clip" style={{ top: '-18px', right: '30px' }} />
-        <div className="coffee-stain" style={{ bottom: '-30px', left: '-20px' }} />
 
         <p style={{ fontFamily: "var(--handwritten)", fontSize: '1.3rem', color: 'var(--ink-light)', marginBottom: '0.5rem' }}>
           Got a project? Let&apos;s talk!

@@ -36,7 +36,6 @@ export default function Hero() {
       <Hero3DObjects />
 
       {/* Scattered decorative elements */}
-      <div className="coffee-stain" style={{ top: '15%', right: '8%' }} />
       <motion.p initial={{ opacity: 0 }} animate={{ opacity: 0.15 }} transition={{ delay: 1 }} style={{ position: 'absolute', top: '12%', right: '5%', fontFamily: "'Caveat', cursive", fontSize: '6rem', color: '#e8913a', transform: 'rotate(12deg)', pointerEvents: 'none', fontWeight: 700 }}>
         01
       </motion.p>
