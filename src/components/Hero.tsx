@@ -13,12 +13,29 @@ function LinkedinIcon() {
   return <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>;
 }
 
+const DEFAULT_CV = '/Bello_Jamiu_Ishola_CV.pdf';
+
 export default function Hero() {
-  const [cvUrl, setCvUrl] = useState<string | null>(null);
+  const [cvUrl, setCvUrl] = useState<string>(DEFAULT_CV);
 
   useEffect(() => {
-    supabase.from('settings').select('value').eq('key', 'cv_url').single()
-      .then(({ data }) => { if (data) setCvUrl(data.value); });
+    // Check localStorage first
+    const cachedCv = localStorage.getItem('portfolio_cv_url');
+    if (cachedCv) setCvUrl(cachedCv);
+
+    // Fetch live CV URL from Supabase settings
+    async function loadCv() {
+      try {
+        const { data } = await supabase.from('settings').select('value').eq('key', 'cv_url').single();
+        if (data && data.value) {
+          setCvUrl(data.value); 
+          localStorage.setItem('portfolio_cv_url', data.value);
+        }
+      } catch (err) {
+        console.warn('Using default CV fallback:', err);
+      }
+    }
+    loadCv();
   }, []);
 
   return (
@@ -27,7 +44,6 @@ export default function Hero() {
       <Hero3DObjects />
 
       {/* Scattered decorative elements */}
-      <div className="coffee-stain" style={{ top: '15%', right: '8%' }} />
       <motion.p initial={{ opacity: 0 }} animate={{ opacity: 0.15 }} transition={{ delay: 1 }} style={{ position: 'absolute', top: '12%', right: '5%', fontFamily: "'Caveat', cursive", fontSize: '6rem', color: '#e8913a', transform: 'rotate(12deg)', pointerEvents: 'none', fontWeight: 700 }}>
         01
       </motion.p>
@@ -69,11 +85,11 @@ export default function Hero() {
 
               {/* CTA buttons */}
               <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                <a href={cvUrl || '#'} download={!!cvUrl} target={cvUrl ? '_blank' : undefined} rel="noopener noreferrer"
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: cvUrl ? 'var(--ink-black)' : '#aaa', color: 'var(--paper-white)', padding: '0.75rem 1.6rem', fontWeight: 700, fontSize: '0.85rem', letterSpacing: '0.05em', textTransform: 'uppercase', cursor: cvUrl ? 'pointer' : 'not-allowed', transition: 'all 0.2s' }}
-                  onMouseOver={(e) => { if (cvUrl) e.currentTarget.style.background = '#e8913a'; }}
-                  onMouseOut={(e) => { if (cvUrl) e.currentTarget.style.background = '#1a1a1a'; }}>
-                  <Download size={15} /> {cvUrl ? 'Download CV' : 'CV Coming Soon'}
+                <a href={cvUrl} download="Bello_Jamiu_Ishola_CV.pdf" target="_blank" rel="noopener noreferrer"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--ink-black)', color: 'var(--paper-white)', padding: '0.75rem 1.6rem', fontWeight: 700, fontSize: '0.85rem', letterSpacing: '0.05em', textTransform: 'uppercase', cursor: 'pointer', transition: 'all 0.2s' }}
+                  onMouseOver={(e) => { e.currentTarget.style.background = '#e8913a'; }}
+                  onMouseOut={(e) => { e.currentTarget.style.background = '#1a1a1a'; }}>
+                  <Download size={15} /> Download CV
                 </a>
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <SocialPill href="mailto:jamibelbhello0104@gmail.com"><Mail size={16} /></SocialPill>
