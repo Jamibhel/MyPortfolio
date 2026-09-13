@@ -7,6 +7,11 @@ export const metadata: Metadata = {
   description: 'Portfolio of Ishola Bello (Bello Jamiu Muhammad). UI/UX Designer and Full-Stack Web & Mobile Developer crafting beautiful, user-centered digital experiences.',
   keywords: ['Ishola Bello', 'Bello Jamiu Muhammad', 'Jamibhel', 'UI/UX Designer', 'Full-Stack Developer', 'Next.js', 'React', 'Portfolio'],
   authors: [{ name: 'Ishola Bello' }],
+  icons: {
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
   openGraph: {
     title: 'Ishola Bello — UI/UX Designer & Developer',
     description: 'Portfolio of Ishola Bello. Crafting beautiful digital experiences.',

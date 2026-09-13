@@ -61,7 +61,7 @@ export default function Polaroid3D({ src, alt, initialRotation = 0, className = 
   return (
     <div style={{ perspective: 1200, zIndex: isHovered ? 10 : 1, width: '100%' }}>
       <motion.div
-        className={`photo-frame ${className}`}
+        className={`project-polaroid-frame ${className}`}
         onMouseMove={handleMouseMove}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
