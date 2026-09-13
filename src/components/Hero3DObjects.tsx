@@ -5,39 +5,7 @@ import { Float, Environment, ContactShadows } from '@react-three/drei';
 import { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 
-function CoffeeCup() {
-  const cupRef = useRef<THREE.Group>(null);
-  
-  useFrame((state) => {
-    if (cupRef.current) {
-      // Gentle floating and sloshing
-      cupRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 1.5) * 0.05 + 0.2;
-      cupRef.current.rotation.z = Math.cos(state.clock.elapsedTime * 1.2) * 0.05;
-    }
-  });
 
-  return (
-    <Float speed={2} rotationIntensity={0.2} floatIntensity={0.4} position={[-3.8, 2.2, 0]}>
-      <group ref={cupRef} scale={0.7}>
-        {/* Cup body */}
-        <mesh position={[0, 0, 0]}>
-          <cylinderGeometry args={[0.8, 0.6, 1.5, 32]} />
-          <meshStandardMaterial color="#faf8f5" roughness={0.2} />
-        </mesh>
-        {/* Coffee liquid inside */}
-        <mesh position={[0, 0.72, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[0.76, 0.76, 0.02, 32]} />
-          <meshStandardMaterial color="#3b2415" roughness={0.9} />
-        </mesh>
-        {/* Handle */}
-        <mesh position={[0.8, 0, 0]} rotation={[0, 0, -Math.PI / 2]}>
-          <torusGeometry args={[0.4, 0.12, 16, 32]} />
-          <meshStandardMaterial color="#faf8f5" roughness={0.2} />
-        </mesh>
-      </group>
-    </Float>
-  );
-}
 
 function Pencil() {
   const pencilRef = useRef<THREE.Group>(null);
@@ -117,7 +85,6 @@ export default function Hero3DObjects() {
         <directionalLight position={[5, 8, 5]} intensity={0.5} />
         <directionalLight position={[-5, 5, -5]} intensity={0.2} />
         
-        <CoffeeCup />
         <Pencil />
         <Eraser />
       </Canvas>

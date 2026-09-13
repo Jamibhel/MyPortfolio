@@ -222,11 +222,13 @@ a { color: inherit; text-decoration: none; }
   .mobile-toggle { display: flex !important; }
   .board-grid { grid-template-columns: 1fr !important; }
   .hero-right { min-height: 400px; margin-top: 2rem; }
-  .project-row { flex-direction: column !important; }
-  .project-images { grid-template-columns: 1fr !important; }
+  .project-row { flex-direction: column !important; gap: 2.5rem !important; }
+  .project-images { grid-template-columns: 1fr !important; width: 100% !important; gap: 1.5rem !important; }
+  .photo-frame { padding: 8px !important; }
 }
 @media (max-width: 480px) {
   .skills-grid { grid-template-columns: 1fr 1fr !important; }
+  .project-images { width: 100% !important; }
 }
 
 section[id] { scroll-margin-top: 80px; }

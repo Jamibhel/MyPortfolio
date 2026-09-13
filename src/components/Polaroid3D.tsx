@@ -114,6 +114,27 @@ export default function Polaroid3D({ src, alt, initialRotation = 0, className = 
             sizes="(max-width: 768px) 100vw, 50vw" 
           />
           
+          {/* Tap/Zoom badge for mobile & desktop */}
+          <div style={{
+            position: 'absolute',
+            bottom: '8px',
+            right: '8px',
+            background: 'rgba(26,26,26,0.75)',
+            color: '#ffffff',
+            padding: '3px 8px',
+            borderRadius: '4px',
+            fontSize: '0.7rem',
+            fontWeight: 600,
+            letterSpacing: '0.03em',
+            pointerEvents: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '3px',
+            backdropFilter: 'blur(4px)'
+          }}>
+            <span>🔍</span> Expand
+          </div>
+
           {/* Dynamic Glare Overlay */}
           {isHovered && (
             <motion.div
