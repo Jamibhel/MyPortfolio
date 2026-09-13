@@ -19,20 +19,12 @@ export default function Hero() {
   const [cvUrl, setCvUrl] = useState<string>(DEFAULT_CV);
 
   useEffect(() => {
-    // Check localStorage first
-    const cachedCv = localStorage.getItem('portfolio_cv_url');
-    if (cachedCv) setCvUrl(cachedCv);
-
-    // Fetch live CV URL from Supabase settings
     async function loadCv() {
       try {
-        const { data } = await supabase.from('settings').select('value').eq('key', 'cv_url').single();
-        if (data && data.value) {
-          setCvUrl(data.value); 
-          localStorage.setItem('portfolio_cv_url', data.value);
-        }
+        const { data } = await supabase.from('settings').select('value').eq('key', 'cv_url').maybeSingle();
+        if (data && data.value) setCvUrl(data.value);
       } catch (err) {
-        console.warn('Using default CV fallback:', err);
+        console.warn('Could not load CV setting from Supabase, using local default.', err);
       }
     }
     loadCv();
@@ -44,6 +36,7 @@ export default function Hero() {
       <Hero3DObjects />
 
       {/* Scattered decorative elements */}
+      <div className="coffee-stain" style={{ top: '15%', right: '8%' }} />
       <motion.p initial={{ opacity: 0 }} animate={{ opacity: 0.15 }} transition={{ delay: 1 }} style={{ position: 'absolute', top: '12%', right: '5%', fontFamily: "'Caveat', cursive", fontSize: '6rem', color: '#e8913a', transform: 'rotate(12deg)', pointerEvents: 'none', fontWeight: 700 }}>
         01
       </motion.p>

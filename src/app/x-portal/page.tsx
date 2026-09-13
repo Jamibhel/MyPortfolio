@@ -49,24 +49,12 @@ export default function AdminPage() {
     fetchCvUrl();
   }, []);
 
-  async function saveCvUrl(url: string) {
-    setCvUrl(url);
-    localStorage.setItem('portfolio_cv_url', url);
-    try {
-      await supabase.from('settings').upsert({ key: 'cv_url', value: url });
-    } catch (err) {
-      console.warn('Could not sync CV to Supabase:', err);
-    }
-  }
-
   async function fetchCvUrl() {
-    const cached = localStorage.getItem('portfolio_cv_url');
-    if (cached) setCvUrl(cached);
-
-    const { data } = await supabase.from('settings').select('value').eq('key', 'cv_url').single();
-    if (data && data.value) {
-      setCvUrl(data.value);
-      localStorage.setItem('portfolio_cv_url', data.value);
+    try {
+      const { data } = await supabase.from('settings').select('value').eq('key', 'cv_url').maybeSingle();
+      if (data) setCvUrl(data.value);
+    } catch (e) {
+      console.warn('Could not fetch CV setting', e);
     }
   }
 
@@ -75,24 +63,17 @@ export default function AdminPage() {
     setCvUploading(true);
     const file = e.target.files[0];
     const fileName = `cv-${Date.now()}.pdf`;
-    
-    try {
-      const { data, error } = await supabase.storage.from('project-images').upload(fileName, file, { upsert: true });
-      if (error) { 
-        setStatus(`Supabase upload warning: ${error.message}. You can also paste a direct CV URL below.`); 
-        setCvUploading(false); 
-        return; 
-      }
-      const { data: urlData } = supabase.storage.from('project-images').getPublicUrl(data.path);
-      const publicUrl = urlData.publicUrl;
-      await saveCvUrl(publicUrl);
-      setStatus('CV uploaded & updated successfully!');
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err);
-      setStatus(`CV upload notice: ${message}. Using pasted URL if provided.`);
-    } finally {
-      setCvUploading(false);
-    }
+    // Remove old CV if exists
+    await supabase.storage.from('project-images').remove([fileName]);
+    const { data, error } = await supabase.storage.from('project-images').upload(fileName, file, { upsert: true });
+    if (error) { setStatus(`CV upload error: ${error.message}`); setCvUploading(false); return; }
+    const { data: urlData } = supabase.storage.from('project-images').getPublicUrl(data.path);
+    const publicUrl = urlData.publicUrl;
+    // Upsert into settings table
+    await supabase.from('settings').upsert({ key: 'cv_url', value: publicUrl });
+    setCvUrl(publicUrl);
+    setStatus('CV uploaded successfully!');
+    setCvUploading(false);
   }
 
   async function fetchProjects() {
@@ -251,23 +232,12 @@ export default function AdminPage() {
                 <input type="file" accept=".pdf" onChange={handleCvUpload} style={{ display: 'none' }} disabled={cvUploading} />
               </label>
 
-              <div style={{ marginTop: '2rem', textAlign: 'left', maxWidth: '500px', margin: '2rem auto 0' }}>
-                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#555', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.3rem', display: 'block' }}>Or Paste Direct CV Link:</label>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  <input id="directCvUrl" style={{ width: '100%', padding: '0.7rem 1rem', border: '2px solid #e0d8cc', borderRadius: '6px', background: '#fff', fontSize: '0.9rem', outline: 'none' }} placeholder="https://..." />
-                  <button onClick={() => { const inp = document.getElementById('directCvUrl') as HTMLInputElement; if (inp.value) { saveCvUrl(inp.value); setStatus('CV link updated successfully!'); inp.value = ''; }}}
-                    style={{ padding: '0 1.2rem', background: '#1a1a1a', color: '#faf8f5', border: 'none', borderRadius: '6px', fontWeight: 700, cursor: 'pointer' }}>
-                    Save
-                  </button>
-                </div>
-              </div>
-
               {cvUrl && (
                 <div style={{ marginTop: '2rem', padding: '1.25rem', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px' }}>
-                  <p style={{ color: '#166534', fontWeight: 600, marginBottom: '0.75rem' }}>✅ CV currently active:</p>
+                  <p style={{ color: '#166534', fontWeight: 600, marginBottom: '0.75rem' }}>✅ CV currently live:</p>
                   <a href={cvUrl} target="_blank" rel="noopener noreferrer"
                     style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: '#4a8fe7', fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.85rem', wordBreak: 'break-all' }}>
-                    <ExternalLink size={14} /> View Active CV
+                    <ExternalLink size={14} /> View Current CV
                   </a>
                 </div>
               )}

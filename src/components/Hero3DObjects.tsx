@@ -17,7 +17,7 @@ function CoffeeCup() {
   });
 
   return (
-    <Float speed={2} rotationIntensity={0.2} floatIntensity={0.4} position={[3, 1, -1]}>
+    <Float speed={2} rotationIntensity={0.2} floatIntensity={0.4} position={[-3.8, 2.2, 0]}>
       <group ref={cupRef} scale={0.7}>
         {/* Cup body */}
         <mesh position={[0, 0, 0]}>
