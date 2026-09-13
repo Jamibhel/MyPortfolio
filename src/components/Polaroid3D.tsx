@@ -59,7 +59,7 @@ export default function Polaroid3D({ src, alt, initialRotation = 0, className = 
   };
 
   return (
-    <div style={{ perspective: 1200, zIndex: isHovered ? 10 : 1 }}>
+    <div style={{ perspective: 1200, zIndex: isHovered ? 10 : 1, width: '100%' }}>
       <motion.div
         className={`photo-frame ${className}`}
         onMouseMove={handleMouseMove}
@@ -81,7 +81,8 @@ export default function Polaroid3D({ src, alt, initialRotation = 0, className = 
           rotateY,
           transformStyle: 'preserve-3d',
           cursor: onClick ? 'zoom-in' : 'grab',
-          position: 'relative'
+          position: 'relative',
+          width: '100%'
         }}
         whileTap={{ scale: 0.98, cursor: onClick ? 'zoom-in' : 'grabbing' }}
       >
